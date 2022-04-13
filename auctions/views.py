@@ -4,12 +4,15 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Listing
 
 
 def index(request):
     # get models.py -> Listings.all(); display Listings on index:  title, description, current price, and photo.
-    return render(request, "auctions/index.html")
+    
+    return render(request, "auctions/index.html", {
+        "listings": Listing.objects.all()
+    })
 
 
 def login_view(request):

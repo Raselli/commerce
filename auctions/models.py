@@ -10,7 +10,9 @@ class Listing():
     description = models.TextField(max_length=512)
     starting_bid = models.DecimalField(max_length=12)
     img_url = models.URLField()
-    pass
+    
+    def __str__(self):
+        return f"Title: {self.title},\n description: {self.description}, \n Starting bid: {self.starting_bid}, \n Image: {self.img_url}" 
 
 class Bid():
     pass
