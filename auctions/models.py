@@ -11,18 +11,19 @@ class Listing(models.Model):
     )
     
     description = models.CharField(
+        
         max_length=512
     )
     
-    starting_bid = models.DecimalField(
+    start_bid = models.DecimalField(
         max_digits=8, 
-        decimal_places=2,
-        default = 0
+        decimal_places=2
     )
     
     current_bid = models.DecimalField(
         max_digits=8, 
-        decimal_places=2
+        decimal_places=2,
+        default = 0
     )    
     
     img_url = models.URLField(
@@ -30,7 +31,7 @@ class Listing(models.Model):
     )
     
     def __str__(self):
-        return f"Title: \"{self.title}\". Bid starting @ ${self.starting_bid}, current bid ${self.current_bid}" 
+        return f"Title: \"{self.title}\". Bid starting @ ${self.start_bid}, current bid ${self.current_bid}" 
 
 class Bid():
     pass

@@ -10,35 +10,38 @@ from .models import User, Listing
 
 
 def index(request):
-    # get models.py -> Listings.all(); display Listings on index:  title, description, current price, and photo.
-    
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.all()
     })
 
-class CreateListing(forms.Form):
-    title = forms.CharField(label="Title of listing item", max_length=60)
-    description = forms.CharField(widget=forms.Textarea, label="Description of listing item", max_length=512)
-    starting_bid = forms.DecimalField(max_digits=8, decimal_places=2)
-    #img_url = forms.URLField(max_length=200)
+class ListingForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        fields = ("title", "description", "start_bid", "img_url")
+            
+        widget = {
+            "description": forms.Textarea()
+        }
+        
+        labels = {
+            "title": "Title of listing item",
+            "Description": "Description of listing item",
+            "start_bid": "Staring Bid $:",
+            "img_url": "Add an URL of your listing:"
+        }
 
 def create_listing(request):
-    #TO DO
     if request.method == "POST":
-        form = CreateListing(request.POST)
+        form = ListingForm(request.POST)
         if form.is_valid():
-            print("++++++++++++++++++++++++++++++++++++++++")
-            #print(f"{Listing}\n {form}")
-            print("-------------------------------------")            
-            #return HttpResponseRedirect(reverse("listing"), args=(form.title))
-            return render(request, "auctions/index.html")
-            
-            
+            form.save()
+            return HttpResponseRedirect(reverse("index"))
+              
     # method == GET
     else:
         return render(request, "auctions/create_listing.html", {
-            "form": CreateListing()
-        }) 
+            "form": ListingForm()
+        })
 
 def listing():
     #TO DO
