@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -17,20 +18,21 @@ def index(request):
 
 class CreateListing(forms.Form):
     title = forms.CharField(label="Title of listing item", max_length=60)
-    description = forms.CharField(widget=forms.Textarea, label="Description of listing item")
+    description = forms.CharField(widget=forms.Textarea, label="Description of listing item", max_length=512)
     starting_bid = forms.DecimalField(max_digits=8, decimal_places=2)
-    img_url = forms.URLField(max_length=200)
+    #img_url = forms.URLField(max_length=200)
 
 def create_listing(request):
     #TO DO
     if request.method == "POST":
         form = CreateListing(request.POST)
-        
         if form.is_valid():
-            title = form.cleaned_data("title")
-            description = form.cleaned_data("description")
-            starting_bid = form.cleaned_data("starting_bid")
-            img_url = form.cleaned_data("img_url")
+            print("++++++++++++++++++++++++++++++++++++++++")
+            #print(f"{Listing}\n {form}")
+            print("-------------------------------------")            
+            #return HttpResponseRedirect(reverse("listing"), args=(form.title))
+            return render(request, "auctions/index.html")
+            
             
     # method == GET
     else:
