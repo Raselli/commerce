@@ -6,6 +6,8 @@ class User(AbstractUser):
     pass
 
 class Listing(models.Model):
+    #user_id = User.id
+    
     title = models.CharField(
         max_length=60
     )

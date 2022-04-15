@@ -5,15 +5,17 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
+from flask_login import login_required
 
 from .models import User, Listing
 
-
+# Home
 def index(request):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.all()
     })
 
+# Form: new listing
 class ListingForm(forms.ModelForm):
     class Meta:
         model = Listing
@@ -29,7 +31,9 @@ class ListingForm(forms.ModelForm):
             "start_bid": "Staring Bid $:",
             "img_url": "Add an URL of your listing:"
         }
-
+        
+#  create new listing
+@login_required
 def create_listing(request):
     if request.method == "POST":
         form = ListingForm(request.POST)
@@ -43,18 +47,28 @@ def create_listing(request):
             "form": ListingForm()
         })
 
-def listing():
-    #TO DO
-    pass
+# display listing
+def listing(request, item_name):
+    title = Listing.title
+    return render(request, "auctions/listing.html", {
+        "listing": Listing.objects.get(title=item_name)
+    })
 
-def watchlist():
-    #TO DO
-    pass
+# watchlist
+@login_required
+def watchlist(request):
+    
+    return render(request, "auctions/watchlist.html", {
 
+    })
+
+# categories
 def categories():
     #TO DO
     pass
 
+# add bid to listing
+@login_required
 def bidding(request):
     # add lock to prevent bidding collision
     bid = request.Post("bid")
@@ -70,6 +84,8 @@ def bidding(request):
         else:
            message = "Your bid must be higher than the currently highest bid."
            return message
+
+
 
 def login_view(request):
     if request.method == "POST":

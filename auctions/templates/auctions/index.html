@@ -4,9 +4,11 @@
 
     <h2>Active Listings</h2>
     {% if listings %}
+        <ul>
         {% for listing in listings %}
-            {{ listing }}
+            <li><a href="listing/{{ listing.title }}">{{ listing }}</a></li>
         {% endfor %}
+        <ul>
     {% else %}
         No listings atm.
     {% endif %}
