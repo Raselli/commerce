@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
-from flask_login import login_required
+from django.contrib.auth.decorators import login_required
 
 from .models import User, Listing
 
@@ -33,7 +33,7 @@ class ListingForm(forms.ModelForm):
         }
         
 #  create new listing
-@login_required
+@login_required(login_url='login')
 def create_listing(request):
     if request.method == "POST":
         form = ListingForm(request.POST)
@@ -55,7 +55,7 @@ def listing(request, item_name):
     })
 
 # watchlist
-@login_required
+@login_required(login_url='login')
 def watchlist(request):
     
     return render(request, "auctions/watchlist.html", {
@@ -68,7 +68,7 @@ def categories():
     pass
 
 # add bid to listing
-@login_required
+@login_required(login_url='login')
 def bidding(request):
     # add lock to prevent bidding collision
     bid = request.Post("bid")
@@ -86,7 +86,7 @@ def bidding(request):
            return message
 
 
-
+# Login
 def login_view(request):
     if request.method == "POST":
 
@@ -103,15 +103,16 @@ def login_view(request):
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
             })
+    # method == Get        
     else:
         return render(request, "auctions/login.html")
 
-
+# Logout
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-
+# Register
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -135,5 +136,6 @@ def register(request):
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
+    # method == Get   
     else:
         return render(request, "auctions/register.html")
