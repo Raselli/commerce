@@ -32,12 +32,18 @@ class ListingForm(forms.ModelForm):
             "img_url": "Add an URL of your listing:"
         }
         
+        
 #  create new listing
 @login_required(login_url='login')
 def create_listing(request):
     if request.method == "POST":
+        # post form and get foreign key
         form = ListingForm(request.POST)
+        user_id = request.user.id      
         if form.is_valid():
+            # save form, add foreign key and commit
+            form = form.save(commit=False)
+            form.user_id = user_id
             form.save()
             return HttpResponseRedirect(reverse("index"))
               
