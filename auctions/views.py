@@ -7,7 +7,7 @@ from django.urls import reverse
 from django import forms
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing
+from .models import User, Listing, Watchlist
 
 # Home
 def index(request):
@@ -55,7 +55,7 @@ def create_listing(request):
 
 # display listing
 def listing(request, item_name):
-    title = Listing.title
+    #title = Listing.title
     return render(request, "auctions/listing.html", {
         "listing": Listing.objects.get(title=item_name)
     })
@@ -63,9 +63,21 @@ def listing(request, item_name):
 # watchlist
 @login_required(login_url='login')
 def watchlist(request):
-    
+    user = request.user.id
+    if request.method == "Post":
+        listing = request.Post.get("watchlist")
+        current_watchlist = Watchlist.objects.filter(user=user)
+        if listing in current_watchlist.listing:
+            Watchlist.object(user=user, listing=listing).delete()
+            return HttpResponseRedirect(reverse("watchlist"))            
+        else:
+            add_to_watchlist = Watchlist(user=user, listing=listing) 
+            add_to_watchlist.save()
+            return HttpResponseRedirect(reverse("watchlist"))
+                                  
+    # method == GET
     return render(request, "auctions/watchlist.html", {
-
+        "watchlist": Watchlist.objects.filter(user=user)
     })
 
 # categories
