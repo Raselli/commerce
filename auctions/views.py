@@ -7,7 +7,7 @@ from django.urls import reverse
 from django import forms
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Watchlist
+from .models import User, Listing, Watchlist, Bid
 
 # Home
 def index(request):
@@ -54,30 +54,69 @@ def create_listing(request):
         })
 
 
+# Form: new listing
+class BidForm(forms.ModelForm):
+    class Meta:
+        model = Bid
+        fields = ("current_bid",)
+        
+        labels = {
+            "current_bid": "Bid on this item $:"
+        }
+        
+        
 # display listing, add/remove to watchlist
 def listing(request, item_name):
     if request.method == "POST":
         user = request.user
         listing = Listing.objects.get(title=item_name)
-        on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
+           
+        # add/remove item -> watchlist
+        if "watchlist" in request.POST:
+            on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
+            
+            # if on watchlist: remove item
+            if on_watchlist:
+                on_watchlist.delete()
+                return HttpResponseRedirect(reverse("watchlist"))
+            
+            # add to watchlist       
+            else:
+                add_to_watchlist = Watchlist(user=user, listing=listing) 
+                add_to_watchlist.save()
+                return HttpResponseRedirect(reverse("watchlist"))
         
-        # if on watchlist: remove item
-        if on_watchlist:
-            on_watchlist.delete()
-            return HttpResponseRedirect(reverse("watchlist"))
-        
-        # add to watchlist       
-        else:
-            add_to_watchlist = Watchlist(user=user, listing=listing) 
-            add_to_watchlist.save()
-            return HttpResponseRedirect(reverse("watchlist"))
-    
+        # bid
+        if "bid" in request.POST:
+            form = BidForm(request.POST)
+            form.fields["current_bid"].required = True
+            if form.is_valid():                                       
+                bid = form.cleaned_data["current_bid"]          
+                max_bid = listing.start_bid
+                if listing.highest_bid > listing.start_bid:
+                    max_bid = listing.highest_bid
+
+                if bid <= max_bid:
+                    message = "Your bid must be equal to or higher than starting bid."
+                    return render(request, "auctions/listing.html", {
+                        "listing": Listing.objects.get(title=item_name),
+                        "form": BidForm(),
+                        "message": message
+                    })     
+                else:
+                    update_listing = Listing.objects.get(id=listing.id)
+                    update_listing.highest_bid = bid
+                    update_listing.save()
+                    my_bid = Bid(user=user, listing=listing, current_bid=bid) 
+                    my_bid.save()                    
+                    return HttpResponseRedirect(reverse("watchlist"))
+                    
     # method == GET    
     else:
         return render(request, "auctions/listing.html", {
-            "listing": Listing.objects.get(title=item_name)
+            "listing": Listing.objects.get(title=item_name),
+            "form": BidForm()
         })     
-
 
 # watchlist
 @login_required(login_url='login')
@@ -93,25 +132,6 @@ def watchlist(request):
 def categories():
     #TO DO
     pass
-
-# add bid to listing
-@login_required(login_url='login')
-def bidding(request):
-    # add lock to prevent bidding collision
-    bid = request.Post("bid")
-    if Listing.current_bid == Listing.starting_bid:
-        if bid < Listing.starting_bid:
-            message = "Your bid must be equal to or higher than starting bid."
-            return message
-        else:
-            pass
-    elif Listing.current_bid > Listing.starting_bid:
-        if Listing.current_bid < bid:
-            pass
-        else:
-           message = "Your bid must be higher than the currently highest bid."
-           return message
-
 
 # Login
 def login_view(request):
@@ -130,6 +150,7 @@ def login_view(request):
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
             })
+            
     # method == Get        
     else:
         return render(request, "auctions/login.html")

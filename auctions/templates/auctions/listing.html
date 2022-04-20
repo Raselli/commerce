@@ -5,6 +5,12 @@
     {{ listing }}    
     <form action="" method="post">
         {% csrf_token %}
-        <input type="submit">
+        <input type="submit" name="watchlist" value="watchlist">
+        {{ form }}
+        <input type="submit" name="bid" value="bid">
+
+        {{ message }}
+
+
     </form>
 {% endblock %}
