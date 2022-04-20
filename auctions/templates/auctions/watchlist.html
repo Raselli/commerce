@@ -2,7 +2,17 @@
 
 {% block body %}
     <h2>Watchlist</h2>
-    {% csrf_token %}
-    {{ watchlist }}
-    <input type="submit">
+
+        <ul>
+        {% for item in watchlist %}
+            <li>
+                <form action="" method="post">
+                    {% csrf_token %}                    
+                    {{ item.listing }}
+                    <input type="submit">
+                </form>
+            </li>    
+        {% endfor %}
+        </ul>
+
 {% endblock %}

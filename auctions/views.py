@@ -53,32 +53,41 @@ def create_listing(request):
             "form": ListingForm()
         })
 
-# display listing
-def listing(request, item_name):
-    #title = Listing.title
-    return render(request, "auctions/listing.html", {
-        "listing": Listing.objects.get(title=item_name)
-    })
 
-# watchlist
-@login_required(login_url='login')
-def watchlist(request):
-    user = request.user.id
-    if request.method == "Post":
-        listing = request.Post.get("watchlist")
-        current_watchlist = Watchlist.objects.filter(user=user)
-        if listing in current_watchlist.listing:
-            Watchlist.object(user=user, listing=listing).delete()
-            return HttpResponseRedirect(reverse("watchlist"))            
+# display listing, add/remove to watchlist
+def listing(request, item_name):
+    if request.method == "POST":
+        user = request.user
+        listing = Listing.objects.get(title=item_name)
+        on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
+        
+        # if on watchlist: remove item
+        if on_watchlist:
+            on_watchlist.delete()
+            return HttpResponseRedirect(reverse("watchlist"))
+        
+        # add to watchlist       
         else:
             add_to_watchlist = Watchlist(user=user, listing=listing) 
             add_to_watchlist.save()
             return HttpResponseRedirect(reverse("watchlist"))
-                                  
+    
+    # method == GET    
+    else:
+        return render(request, "auctions/listing.html", {
+            "listing": Listing.objects.get(title=item_name)
+        })     
+
+
+# watchlist
+@login_required(login_url='login')
+def watchlist(request):                                  
     # method == GET
+    user = request.user.id
     return render(request, "auctions/watchlist.html", {
         "watchlist": Watchlist.objects.filter(user=user)
     })
+
 
 # categories
 def categories():
