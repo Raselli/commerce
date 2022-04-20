@@ -93,24 +93,37 @@ def listing(request, item_name):
             if form.is_valid():                                       
                 bid = form.cleaned_data["current_bid"]          
                 max_bid = listing.start_bid
+                highest_bid = listing.highest_bid
+                message = "Your bid must be equal to or higher than the starting bid."  
+                
                 if listing.highest_bid > listing.start_bid:
-                    max_bid = listing.highest_bid
+                    max_bid = listing.highest_bid                    
+                    message = "Your bid must be higher than the currently highest bid." 
 
-                if bid <= max_bid:
-                    message = "Your bid must be equal to or higher than starting bid."
-                    return render(request, "auctions/listing.html", {
-                        "listing": Listing.objects.get(title=item_name),
-                        "form": BidForm(),
-                        "message": message
-                    })     
-                else:
+                if (bid >= max_bid and highest_bid == 0) or (bid > max_bid and highest_bid > 0):
                     update_listing = Listing.objects.get(id=listing.id)
                     update_listing.highest_bid = bid
                     update_listing.save()
                     my_bid = Bid(user=user, listing=listing, current_bid=bid) 
                     my_bid.save()                    
-                    return HttpResponseRedirect(reverse("watchlist"))
+                    return HttpResponseRedirect(reverse("watchlist"))                    
+
+                else:
+                    return render(request, "auctions/listing.html", {
+                        "listing": Listing.objects.get(title=item_name),
+                        "form": BidForm(),
+                        "message": message
+                    })
                     
+            else:
+                message = "You must enter a bid."
+                return render(request, "auctions/listing.html", {
+                    "listing": Listing.objects.get(title=item_name),
+                    "form": BidForm(),
+                    "message": message
+                })
+
+                
     # method == GET    
     else:
         return render(request, "auctions/listing.html", {
