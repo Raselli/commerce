@@ -16,7 +16,8 @@ class Listing(models.Model):
         decimal_places=2,
         default=0
     )    
-    img_url = models.URLField(max_length=200)
+    img_url = models.URLField(max_length=200, blank=True)
+    closed = models.BooleanField(default=False)
     
     def __str__(self):
         return f"Title: \"{self.title}\". Bid starting @ ${self.start_bid}, current bid ${self.highest_bid}" 

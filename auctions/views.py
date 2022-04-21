@@ -38,20 +38,18 @@ class ListingForm(forms.ModelForm):
 def create_listing(request):
     if request.method == "POST":
         # post form and get foreign key
-        form = ListingForm(request.POST)
-        user_id = request.user.id      
+        form = ListingForm(request.POST)     
         if form.is_valid():
             # save form, add foreign key and commit
             form = form.save(commit=False)
-            form.user_id = user_id
+            form.user_id = request.user.id
             form.save()
             return HttpResponseRedirect(reverse("index"))
-              
+           
     # method == GET
-    else:
-        return render(request, "auctions/create_listing.html", {
-            "form": ListingForm()
-        })
+    return render(request, "auctions/create_listing.html", {
+        "form": ListingForm()
+    })
 
 
 # Form: new listing
@@ -67,10 +65,10 @@ class BidForm(forms.ModelForm):
         
 # display listing, add/remove to watchlist
 def listing(request, item_name):
+    user = request.user
+    listing = Listing.objects.get(title=item_name)    
+    
     if request.method == "POST":
-        user = request.user
-        listing = Listing.objects.get(title=item_name)
-           
         # add/remove item -> watchlist
         if "watchlist" in request.POST:
             on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
@@ -118,23 +116,35 @@ def listing(request, item_name):
             else:
                 message = "You must enter a bid."
                 return render(request, "auctions/listing.html", {
-                    "listing": Listing.objects.get(title=item_name),
+                    "listing": listing,
                     "form": BidForm(),
                     "message": message
                 })
 
-                
-    # method == GET    
-    else:
-        return render(request, "auctions/listing.html", {
-            "listing": Listing.objects.get(title=item_name),
-            "form": BidForm()
-        })     
+        if "close" in request.POST:
+            if listing.user_id == user.id:
+                listing = Listing.objects.get(id=listing.id)
+                listing.closed = True
+                listing.save()                
+                if listing.highest_bid == 0:
+                    listing.delete()
+                pass
+
+    # inform winner of auction
+    winner = None    
+    if listing.closed == True:
+        winner = (Bid.objects.get(current_bid=listing.highest_bid, listing_id=listing.id)).user_id
+
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "form": BidForm(),
+        "winner": winner
+    })     
 
 
 # watchlist
 @login_required(login_url='login')
-def watchlist(request, *args, **kwargs):
+def watchlist(request, **kwargs):
     user = request.user.id 
     if request.method == "POST":
         listing = kwargs.get("pk")

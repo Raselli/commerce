@@ -5,12 +5,25 @@
     {{ listing }}    
     <form action="" method="post">
         {% csrf_token %}
-        <input type="submit" name="watchlist" value="watchlist">
-        {{ form }}
-        <input type="submit" name="bid" value="bid">
+        {% if listing.closed == False %}
+            <input type="submit" name="watchlist" value="watchlist">
+            {{ form }}
+            <input type="submit" name="bid" value="bid">
+            {% if listing.user_id == user.id %}
+                <input type="submit" name="close" value="close auction">
+            {% endif %}        
+        {% else %}
 
-        {{ message }}
-
-
+            {% if user.id == winner %}
+                <span>
+                    Congratulations!
+                    <br>
+                    You, {{ user.username }}, have won the auction at a bid of ${{ listing.highest_bid }}.
+                    <br>
+                </span>
+            {% endif %}
+            <b>This auction is closed.<b/>            
+        {% endif %}
+        {{ message }}        
     </form>
 {% endblock %}
