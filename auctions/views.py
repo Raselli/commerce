@@ -131,11 +131,21 @@ def listing(request, item_name):
             "form": BidForm()
         })     
 
+
 # watchlist
 @login_required(login_url='login')
-def watchlist(request):                                  
+def watchlist(request, *args, **kwargs):
+    user = request.user.id 
+    if request.method == "POST":
+        listing = kwargs.get("pk")
+        on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
+
+        # if on watchlist: remove item
+        if on_watchlist:
+            on_watchlist.delete()
+            return HttpResponseRedirect(reverse("watchlist"))
+          
     # method == GET
-    user = request.user.id
     return render(request, "auctions/watchlist.html", {
         "watchlist": Watchlist.objects.filter(user=user)
     })

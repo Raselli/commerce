@@ -2,17 +2,19 @@
 
 {% block body %}
     <h2>Watchlist</h2>
-
-        <ul>      
+    <ul>      
         {% for item in watchlist %}
             <li>
-                <form action="" method="post">
+                <form action="{% url "watchlist" pk=item.listing.id %}" method="post">
                     {% csrf_token %}                    
                     {{ item.listing }}
-                    <input type="submit">
+                    <input type="submit" name="remove" value="remove">
                 </form>
             </li>    
         {% endfor %}
-        </ul>
-
+        
+        {% if not watchlist %}
+            <li>No items are currently on your watchlist.</li>
+        {% endif %}
+    </ul>
 {% endblock %}
