@@ -1,29 +1,46 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Listing</h2>
-    {{ listing }}    
-    <form action="" method="post">
-        {% csrf_token %}
-        {% if listing.closed == False %}
-            <input type="submit" name="watchlist" value="watchlist">
-            {{ form }}
-            <input type="submit" name="bid" value="bid">
-            {% if listing.user_id == user.id %}
-                <input type="submit" name="close" value="close auction">
-            {% endif %}        
-        {% else %}
+    </div>
+        <h2>Listing</h2>
+        {{ listing }}    
+        <form action="" method="post">
+            {% csrf_token %}
+            {% if listing.closed == False %}
+                <input type="submit" name="watchlist" value="watchlist">
+                {{ form }}
+                <input type="submit" name="bid" value="bid">
+                {% if listing.user_id == user.id %}
+                    <input type="submit" name="close" value="close auction">
+                {% endif %}        
+            {% else %}
 
-            {% if user.id == winner %}
-                <span>
-                    Congratulations!
-                    <br>
-                    You, {{ user.username }}, have won the auction at a bid of ${{ listing.highest_bid }}.
-                    <br>
-                </span>
+                {% if user.id == winner %}
+                    <span>
+                        Congratulations!
+                        <br>
+                        You, {{ user.username }}, have won the auction at a bid of ${{ listing.highest_bid }}.
+                        <br>
+                    </span>
+                {% endif %}
+                <b>This auction is closed.<b/>            
             {% endif %}
-            <b>This auction is closed.<b/>            
-        {% endif %}
-        {{ message }}        
-    </form>
+            {{ message }}
+        </form>
+    </div>
+    <hr>
+    <div>
+        <h2>Comment Section:</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <ul>
+                {% for comment in comments %}
+                <li>"{{ comment }}"</li>
+                {% endfor %}
+            </ul>
+            {{ form_2 }}
+            <input type="submit" name="submit_comment" value="send">
+        </form>
+    </div>
+
 {% endblock %}

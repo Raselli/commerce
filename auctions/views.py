@@ -41,6 +41,8 @@ def create_listing(request):
         form = ListingForm(request.POST)     
         if form.is_valid():
             # save form, add foreign key and commit
+            #### FORM CLEAN DATA???
+            #######
             form = form.save(commit=False)
             form.user_id = request.user.id
             form.save()
@@ -67,7 +69,7 @@ class BidForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ("comment")
+        fields = ("comment",)
         
         widget = {
             "comment": forms.Textarea()
@@ -82,7 +84,9 @@ class CommentForm(forms.ModelForm):
 def listing(request, item_name):
     user = request.user
     listing = Listing.objects.get(title=item_name)    
-    
+    comments = Comment.objects.filter(listing_id=listing.id)
+    message = None
+    winner = None
     if request.method == "POST":
         # add/remove item -> watchlist
         if "watchlist" in request.POST:
@@ -121,18 +125,27 @@ def listing(request, item_name):
                     my_bid.save()                    
                     return HttpResponseRedirect(reverse("watchlist"))                    
 
+                #change pls       
                 else:
                     return render(request, "auctions/listing.html", {
-                        "listing": Listing.objects.get(title=item_name),
+                        "listing": listing,
                         "form": BidForm(),
+                        "form_2": CommentForm(),
+                        "comments": comments,
+                        "winner": winner,
                         "message": message
                     })
-                    
+            
+            
+            #change pls       
             else:
                 message = "You must enter a bid."
                 return render(request, "auctions/listing.html", {
                     "listing": listing,
                     "form": BidForm(),
+                    "form_2": CommentForm(),
+                    "comments": comments,
+                    "winner": winner,
                     "message": message
                 })
 
@@ -144,23 +157,28 @@ def listing(request, item_name):
                 if listing.highest_bid == 0:
                     listing.delete()
                 pass
-        """    
-        if "comment" in request.POST:
-            form = CommentForm(request.POST)
-            if form.is_valid():
-        """        
-            
-    # TO DO: if NOT logged in: redirect login form
 
+        if "comment" in request.POST:
+            form_2 = CommentForm(request.POST)
+            if form_2.is_valid():
+                comment = form_2.cleaned_data["comment"]
+                print(comment)
+                new_comment = Comment(user=user, listing=listing, comment=comment)
+                new_comment.save()
+                pass
+                
+    # TO DO: if NOT logged in: redirect login form
     # inform winner of auction
-    winner = None    
     if listing.closed == True:
         winner = (Bid.objects.get(current_bid=listing.highest_bid, listing_id=listing.id)).user_id
 
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "form": BidForm(),
-        "winner": winner
+        "form_2": CommentForm(),
+        "comments": comments,
+        "winner": winner,
+        "message": message
     })     
 
 
