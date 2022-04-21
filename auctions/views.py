@@ -7,7 +7,7 @@ from django.urls import reverse
 from django import forms
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Watchlist, Bid
+from .models import User, Listing, Watchlist, Bid, Comment
 
 # Home
 def index(request):
@@ -61,8 +61,23 @@ class BidForm(forms.ModelForm):
         labels = {
             "current_bid": "Bid on this item $:"
         }
+
+
+# Form: Add comment
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ("comment")
         
+        widget = {
+            "comment": forms.Textarea()
+        }
         
+        labels = {
+            "comment": "Add your comment here!"
+        }
+
+   
 # display listing, add/remove to watchlist
 def listing(request, item_name):
     user = request.user
@@ -129,6 +144,13 @@ def listing(request, item_name):
                 if listing.highest_bid == 0:
                     listing.delete()
                 pass
+        """    
+        if "comment" in request.POST:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+        """        
+            
+    # TO DO: if NOT logged in: redirect login form
 
     # inform winner of auction
     winner = None    

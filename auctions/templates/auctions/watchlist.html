@@ -6,8 +6,8 @@
         {% for item in watchlist %}
             <li>
                 <form action="{% url "watchlist" pk=item.listing.id %}" method="post">
-                    {% csrf_token %}                    
-                    {{ item.listing }}
+                    {% csrf_token %}
+                    <a href="listing/{{ item.listing.title }}">{{ item.listing }}</a>                  
                     <input type="submit" name="remove" value="remove">
                 </form>
             </li>    

@@ -34,8 +34,13 @@ class Bid(models.Model):
     def __str__(self):
         return f"User_id={self.user}, Listing_id={self.listing}"
 
-class Comment():
-    pass
+class Comment(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    listing = models.ForeignKey('Listing', on_delete=models.CASCADE)
+    comment = models.CharField(max_length=512)
+    
+    def __str__(self):
+        return f"{self.comment}"
 
 class Watchlist(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
