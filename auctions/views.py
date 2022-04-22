@@ -7,7 +7,7 @@ from django.urls import reverse
 from django import forms
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Watchlist, Bid, Comment
+from .models import User, Listing, Watchlist, Bid, Comment, Category
 
 # Home
 def index(request):
@@ -92,12 +92,12 @@ def listing(request, item_name):
         if "watchlist" in request.POST:
             on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
             
-            # if on watchlist: remove item
+            # remove existing item
             if on_watchlist:
                 on_watchlist.delete()
                 return HttpResponseRedirect(reverse("watchlist"))
             
-            # add to watchlist       
+            # add non-existing item       
             else:
                 add_to_watchlist = Watchlist(user=user, listing=listing) 
                 add_to_watchlist.save()
@@ -122,32 +122,11 @@ def listing(request, item_name):
                     update_listing.highest_bid = bid
                     update_listing.save()
                     my_bid = Bid(user=user, listing=listing, current_bid=bid) 
-                    my_bid.save()                    
-                    return HttpResponseRedirect(reverse("watchlist"))                    
-
-                #change pls       
-                else:
-                    return render(request, "auctions/listing.html", {
-                        "listing": listing,
-                        "form": BidForm(),
-                        "form_2": CommentForm(),
-                        "comments": comments,
-                        "winner": winner,
-                        "message": message
-                    })
-            
-            
-            #change pls       
+                    my_bid.save()
+                    message = f"Your bid of ${bid} has been accepted."         
+  
             else:
                 message = "You must enter a bid."
-                return render(request, "auctions/listing.html", {
-                    "listing": listing,
-                    "form": BidForm(),
-                    "form_2": CommentForm(),
-                    "comments": comments,
-                    "winner": winner,
-                    "message": message
-                })
 
         if "close" in request.POST:
             if listing.user_id == user.id:
@@ -156,7 +135,6 @@ def listing(request, item_name):
                 listing.save()                
                 if listing.highest_bid == 0:
                     listing.delete()
-                pass
 
         if "comment" in request.POST:
             form_2 = CommentForm(request.POST)
@@ -165,7 +143,6 @@ def listing(request, item_name):
                 print(comment)
                 new_comment = Comment(user=user, listing=listing, comment=comment)
                 new_comment.save()
-                pass
                 
     # TO DO: if NOT logged in: redirect login form
     # inform winner of auction

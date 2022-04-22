@@ -8,6 +8,13 @@ class User(AbstractUser):
 
 class Listing(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        'Category',
+        default=None,        
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+    )
     title = models.CharField(max_length=60, unique=True)
     description = models.CharField(max_length=512)
     start_bid = models.DecimalField(max_digits=8, decimal_places=2)
@@ -32,7 +39,7 @@ class Bid(models.Model):
     )
 
     def __str__(self):
-        return f"User_id={self.user}, Listing_id={self.listing}"
+        return f"${self.current_bid} bid on '{self.listing.title}' by '{self.user}'"
 
 class Comment(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
@@ -40,11 +47,17 @@ class Comment(models.Model):
     comment = models.CharField(max_length=512)
     
     def __str__(self):
-        return f"{self.comment}"
+        return f"\"{self.comment}\" - {self.user}"
 
 class Watchlist(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     listing = models.ForeignKey('Listing', on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"User_id={self.user}, Listing_id={self.listing}"
+        return f"'{self.listing.title}' on watchlist of '{self.user}'"
+    
+class Category(models.Model):
+    category = models.CharField(max_length=32)
+    
+    def __self__(self):
+        return f"{self.category}"
