@@ -19,17 +19,19 @@ def index(request):
 class ListingForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = ("title", "description", "start_bid", "img_url")
+        fields = ("title", "description", "start_bid", "img_url", "category")
             
         widget = {
-            "description": forms.Textarea()
+            "description": forms.Textarea(),
+            "category": forms.Select()
         }
         
         labels = {
             "title": "Title of listing item",
             "Description": "Description of listing item",
             "start_bid": "Staring Bid $:",
-            "img_url": "Add an URL of your listing:"
+            "img_url": "Add an URL of your listing:",
+            "category": "Choose a category."
         }
         
         
