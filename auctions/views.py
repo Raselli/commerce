@@ -173,6 +173,8 @@ def watchlist(request, **kwargs):
         if on_watchlist:
             on_watchlist.delete()
             return HttpResponseRedirect(reverse("watchlist"))
+        
+        # exception / else ...???
           
     # method == GET
     return render(request, "auctions/watchlist.html", {
@@ -181,9 +183,20 @@ def watchlist(request, **kwargs):
 
 
 # categories
-def categories():
-    #TO DO
-    pass
+def categories(request, **kwargs):
+    if kwargs:
+        active_cat = kwargs['cat_name']
+        cat_id = Category.objects.get(category=active_cat).id
+        listings = Listing.objects.filter(category_id=cat_id)
+        return render(request, "auctions/categories.html", {
+            "categories": Category.objects.all(),
+            "active_cat": active_cat,
+            "listings": listings
+        })        
+    else:
+        return render(request, "auctions/categories.html", {
+            "categories": Category.objects.all()
+        })
 
 # Login
 def login_view(request):

@@ -60,4 +60,4 @@ class Category(models.Model):
     category = models.CharField(max_length=32)
     
     def __self__(self):
-        return f"{self.category}"
+        return f"{self.id}: {self.category}"
