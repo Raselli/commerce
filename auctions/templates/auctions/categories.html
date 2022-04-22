@@ -2,12 +2,18 @@
 
 {% block body %}
     <h2>Categories</h2>
-    <ul>      
+    <ul>
+        
         {% for item in categories %}
             <li>
                 <a href="../categories/{{ item.category }}">{{ item.category|title }}</a>
             </li>    
         {% endfor %}
+
+        <br>
+        <li>
+            <a href="../categories/unlisted">Unlisted</a>
+        </li>
     </ul>
 
     {% if active_cat %}

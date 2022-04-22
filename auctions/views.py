@@ -1,7 +1,7 @@
 from asyncio.windows_events import NULL
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
@@ -166,37 +166,45 @@ def listing(request, item_name):
 def watchlist(request, **kwargs):
     user = request.user.id 
     if request.method == "POST":
-        listing = kwargs.get("pk")
+        listing = kwargs["pk"]             
         on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
+        on_watchlist.delete()
+        return HttpResponseRedirect(reverse("watchlist"))
 
-        # if on watchlist: remove item
-        if on_watchlist:
-            on_watchlist.delete()
-            return HttpResponseRedirect(reverse("watchlist"))
-        
-        # exception / else ...???
-          
-    # method == GET
-    return render(request, "auctions/watchlist.html", {
-        "watchlist": Watchlist.objects.filter(user=user)
-    })
+    else:         
+        # method == GET
+        return render(request, "auctions/watchlist.html", {
+            "watchlist": Watchlist.objects.filter(user=user)
+        })
 
 
 # categories
 def categories(request, **kwargs):
     if kwargs:
-        active_cat = kwargs['cat_name']
-        cat_id = Category.objects.get(category=active_cat).id
-        listings = Listing.objects.filter(category_id=cat_id)
-        return render(request, "auctions/categories.html", {
-            "categories": Category.objects.all(),
-            "active_cat": active_cat,
-            "listings": listings
-        })        
+        if kwargs['cat_name'] == "unlisted":
+            return render(request, "auctions/categories.html", {
+                "categories": Category.objects.all(),
+                "active_cat": "unlisted",
+                "listings": Listing.objects.filter(category_id=None)
+            })                   
+
+        try:
+            active_cat = kwargs["cat_name"]
+            cat_id = Category.objects.get(category=active_cat).id
+            return render(request, "auctions/categories.html", {
+                "categories": Category.objects.all(),
+                "active_cat": active_cat,
+                "listings": Listing.objects.filter(category_id=cat_id)
+            })               
+            
+        except:
+            raise Http404("Category does not exist.")
+
     else:
         return render(request, "auctions/categories.html", {
             "categories": Category.objects.all()
         })
+
 
 # Login
 def login_view(request):
