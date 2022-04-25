@@ -1,3 +1,30 @@
 body {
     padding: 10px;
 }
+
+.grid {
+    background-color: green;
+    display: grid;
+    padding: 20px;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    grid-template-columns: auto;
+}
+
+.grid-item {
+    margin: 0px auto 0px auto;
+    width: 70vw;
+    height: 200px;
+    border-radius: 20px;
+    box-shadow: 2px 2px 2px;
+    background-color: white;
+    font-size: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+.img_background {
+    width: 150px;
+    height: 150px;
+    background-color: darkgray;
+}  

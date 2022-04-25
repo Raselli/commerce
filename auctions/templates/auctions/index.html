@@ -1,29 +1,57 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
     <h2>Active Listings</h2>
+    <div class="grid">      
     {% if listings %}
-        <ul>
         {% for listing in listings %}
-            <div>
-                <a href="listing/{{ listing.title }}">{{ listing.title }}</a>
-                <img src="{{ listing.img_url }}" alt="{{ listing.title }}">
 
-                    {% if listing.highest_bid == 0 %}
-                        $ {{ listing.start_bid }}
-                    {% else %}
-                        $ {{ listing.highest_bid }}
-                    {% endif %}
-
-                {{ listing.description }}
-                {{ listing.category.category }}
-                {{ listing.user }}
+            <div class="grid-item">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="img_background">                       
+                                <img src="{{ listing.img_url }}" alt="{{ listing.title }}">
+                            </div>
+                        </td>
+                        <td>                        
+                            <table>
+                                <tr>                                           
+                                    <td>
+                                        <a href="listing/{{ listing.title }}">{{ listing.title }}</a>
+                                    </td>
+                                    <td>
+                                        {% if listing.highest_bid == 0 %}
+                                            $ {{ listing.start_bid }}
+                                        {% else %}
+                                            $ {{ listing.highest_bid }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ listing.description }}
+                                    </td>
+                                    <td>
+                                        {{ listing.category.category }}
+                                    </td>
+                                    <td>
+                                        {{ listing.user }}        
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>                                                      
+                    </tr>
+                </table>
 
             </div>
+
         {% endfor %}
-        <ul>
+
     {% else %}
-        No listings atm.
+
+        <div class="grid-item">
+            No listings atm.
+        </div>   
+
     {% endif %}
+    </div>    
 {% endblock %}
