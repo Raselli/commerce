@@ -6,7 +6,21 @@
     {% if listings %}
         <ul>
         {% for listing in listings %}
-            <li><a href="listing/{{ listing.title }}">{{ listing }}</a></li>
+            <div>
+                <a href="listing/{{ listing.title }}">{{ listing.title }}</a>
+                <img src="{{ listing.img_url }}" alt="{{ listing.title }}">
+
+                    {% if listing.highest_bid == 0 %}
+                        $ {{ listing.start_bid }}
+                    {% else %}
+                        $ {{ listing.highest_bid }}
+                    {% endif %}
+
+                {{ listing.description }}
+                {{ listing.category.category }}
+                {{ listing.user }}
+
+            </div>
         {% endfor %}
         <ul>
     {% else %}

@@ -12,7 +12,7 @@ from .models import User, Listing, Watchlist, Bid, Comment, Category
 # Home
 def index(request):
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.all()
+        "listings": Listing.objects.select_related()
     })
 
 # Form: new listing
@@ -43,8 +43,6 @@ def create_listing(request):
         form = ListingForm(request.POST)     
         if form.is_valid():
             # save form, add foreign key and commit
-            #### FORM CLEAN DATA???
-            #######
             form = form.save(commit=False)
             form.user_id = request.user.id
             form.save()
