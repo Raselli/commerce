@@ -39,15 +39,22 @@ class ListingForm(forms.ModelForm):
 @login_required(login_url='login')
 def create_listing(request):
     if request.method == "POST":
-        # post form and get foreign key
-        form = ListingForm(request.POST)     
+        form = ListingForm(request.POST)
+        
+        # save form, add foreign key and commit            
         if form.is_valid():
-            # save form, add foreign key and commit
             form = form.save(commit=False)
             form.user_id = request.user.id
             form.save()
-            return HttpResponseRedirect(reverse("index"))
-           
+            return HttpResponseRedirect(f"listing/{form.title}")
+        
+        # invalid form data
+        else:
+            return render(request, "auctions/create_listing.html", {
+                "form": ListingForm(),
+                "message": "Invalid input."
+            })             
+
     # method == GET
     return render(request, "auctions/create_listing.html", {
         "form": ListingForm()
@@ -83,14 +90,16 @@ class CommentForm(forms.ModelForm):
 # display listing, add/remove to watchlist
 def listing(request, item_name):
     user = request.user
-    listing = Listing.objects.get(title=item_name)    
-    comments = Comment.objects.filter(listing_id=listing.id)
+    listing = Listing.objects.prefetch_related().get(title=item_name)    
     message = None
     winner = None
+    on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
+    print(on_watchlist)
+        
     if request.method == "POST":
+
         # add/remove item -> watchlist
         if "watchlist" in request.POST:
-            on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
             
             # remove existing item
             if on_watchlist:
@@ -132,9 +141,11 @@ def listing(request, item_name):
             if listing.user_id == user.id:
                 listing = Listing.objects.get(id=listing.id)
                 listing.closed = True
-                listing.save()                
+                listing.save()
                 if listing.highest_bid == 0:
                     listing.delete()
+                    return HttpResponseRedirect(reverse("index"))
+                return HttpResponseRedirect(f"{listing.title}")                
 
         if "comment" in request.POST:
             form_2 = CommentForm(request.POST)
@@ -144,7 +155,6 @@ def listing(request, item_name):
                 new_comment = Comment(user=user, listing=listing, comment=comment)
                 new_comment.save()
                 
-    # TO DO: if NOT logged in: redirect login form
     # inform winner of auction
     if listing.closed == True:
         winner = (Bid.objects.get(current_bid=listing.highest_bid, listing_id=listing.id)).user_id
@@ -153,7 +163,6 @@ def listing(request, item_name):
         "listing": listing,
         "form": BidForm(),
         "form_2": CommentForm(),
-        "comments": comments,
         "winner": winner,
         "message": message
     })     
@@ -162,15 +171,17 @@ def listing(request, item_name):
 # watchlist
 @login_required(login_url='login')
 def watchlist(request, **kwargs):
-    user = request.user.id 
+    user = request.user.id
+    
+    # remove item from watchlist
     if request.method == "POST":
         listing = kwargs["pk"]             
         on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
         on_watchlist.delete()
         return HttpResponseRedirect(reverse("watchlist"))
 
+    # method == GET
     else:         
-        # method == GET
         return render(request, "auctions/watchlist.html", {
             "watchlist": Watchlist.objects.filter(user=user)
         })
@@ -179,6 +190,7 @@ def watchlist(request, **kwargs):
 # categories
 def categories(request, **kwargs):
     if kwargs:
+        # render category "unlisted"
         if kwargs['cat_name'] == "unlisted":
             return render(request, "auctions/categories.html", {
                 "categories": Category.objects.all(),
@@ -186,6 +198,7 @@ def categories(request, **kwargs):
                 "listings": Listing.objects.filter(category_id=None)
             })                   
 
+        # render category (excluding": "unlisted")
         try:
             active_cat = kwargs["cat_name"]
             cat_id = Category.objects.get(category=active_cat).id
@@ -198,6 +211,7 @@ def categories(request, **kwargs):
         except:
             raise Http404("Category does not exist.")
 
+    # method == GET
     else:
         return render(request, "auctions/categories.html", {
             "categories": Category.objects.all()

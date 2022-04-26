@@ -3,12 +3,19 @@
 {% block body %}
     </div>
         <h2>Listing</h2>
+        S{{ watchlist }}S
         {{ listing }}
         {% if user.is_authenticated %}         
             <form action="" method="post">
                 {% csrf_token %}
                 {% if listing.closed == False %}
-                    <input type="submit" name="watchlist" value="watchlist">
+
+                    {% if on_watchlist.id == None%}
+                        <input type="submit" name="watchlist" value="A">
+                    {% else %}
+                        <input type="submit" name="watchlist" value="B">
+                    {% endif %}
+
                     {{ form }}
                     <input type="submit" name="bid" value="bid">
                     {% if listing.user_id == user.id %}
@@ -46,12 +53,12 @@
         <ul>
             {% if comments %}
                 {% for comment in comments %}
-                <li>{{ comment.comment }} {{ comment.user_id }}</li>
+                <li>{{ comment }}</li>
                 {% endfor %}
             {% else %}
                 <li>No comments on this listing item.</li>
             {% endif %}
-        </ul>        
+        </ul>
     </div>
 
 {% endblock %}
