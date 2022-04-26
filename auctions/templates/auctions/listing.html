@@ -5,6 +5,8 @@
         <h2>Listing</h2>
         S{{ watchlist }}S
         {{ listing }}
+        Amount of auctions: {{ count}}
+        
         {% if user.is_authenticated %}         
             <form action="" method="post">
                 {% csrf_token %}
@@ -22,7 +24,8 @@
                         <input type="submit" name="close" value="close auction">
                     {% endif %}        
                 {% else %}
-                    {% if user.id == winner %}
+                AAAA
+                    {% if listing.closed == True and leading_bid.user_id == user.id %}
                         <span>
                             Congratulations!
                             <br>
@@ -43,7 +46,7 @@
     <hr>
     <div>
         <h2>Comment Section:</h2>
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and listing.closed == False %}
             <form action="" method="post">
                 {% csrf_token %}
                 {{ form_2 }}

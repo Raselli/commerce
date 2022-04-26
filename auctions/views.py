@@ -87,85 +87,103 @@ class CommentForm(forms.ModelForm):
         }
 
    
-# display listing, add/remove to watchlist
+# display listing page
 def listing(request, item_name):
+    try: 
+        listing = Listing.objects.prefetch_related().get(title=item_name)
+    except:
+        raise Http404("Listing does not exist.")
+    
     user = request.user
-    listing = Listing.objects.prefetch_related().get(title=item_name)    
-    message = None
-    winner = None
+    comments = Comment.objects.filter(listing_id=listing.id)
     on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
-    print(on_watchlist)
+    bid_count = Bid.objects.filter(current_bid=listing.highest_bid, listing_id=listing.id).count()
+
+    try:
+        highest_bidder = Bid.objects.get(current_bid=listing.highest_bid, listing_id=listing.id)
+    except:
+        highest_bidder = None
         
     if request.method == "POST":
 
-        # add/remove item -> watchlist
+        # add/remove item from watchlist
         if "watchlist" in request.POST:
-            
-            # remove existing item
             if on_watchlist:
-                on_watchlist.delete()
-                return HttpResponseRedirect(reverse("watchlist"))
-            
-            # add non-existing item       
+                on_watchlist.delete()     
             else:
                 add_to_watchlist = Watchlist(user=user, listing=listing) 
                 add_to_watchlist.save()
-                return HttpResponseRedirect(reverse("watchlist"))
+            return HttpResponseRedirect(reverse("watchlist"))
         
-        # bid
+        # Bid on listing-item
         if "bid" in request.POST:
             form = BidForm(request.POST)
             form.fields["current_bid"].required = True
             if form.is_valid():                                       
-                bid = form.cleaned_data["current_bid"]          
-                max_bid = listing.start_bid
-                highest_bid = listing.highest_bid
-                message = "Your bid must be equal to or higher than the starting bid."  
+                bid = form.cleaned_data["current_bid"]
                 
-                if listing.highest_bid > listing.start_bid:
-                    max_bid = listing.highest_bid                    
-                    message = "Your bid must be higher than the currently highest bid." 
+                # Invalid bid
+                if bid < 0:                 
+                    message = "You must enter a valid bid."
+                    
+                # Invalid bid at starting_bid
+                elif listing.highest_bid == 0 and bid < listing.start_bid: 
+                    message = "Your bid must be atleast equal to the starting bid."                 
 
-                if (bid >= max_bid and highest_bid == 0) or (bid > max_bid and highest_bid > 0):
+                # Invalid bid at current_bid
+                elif listing.highest_bid > 0 and bid <= listing.highest_bid:
+                    message = "Your bid must be higher than the current bid."                     
+                    
+                # Accept bid  
+                else:
                     update_listing = Listing.objects.get(id=listing.id)
                     update_listing.highest_bid = bid
                     update_listing.save()
                     my_bid = Bid(user=user, listing=listing, current_bid=bid) 
                     my_bid.save()
-                    message = f"Your bid of ${bid} has been accepted."         
-  
-            else:
-                message = "You must enter a bid."
+                    return HttpResponseRedirect(f"{listing.title}")                   
 
+            # invalid bid-form data
+            else:
+                message = "You must enter a valid bid."
+            
+            # render listing with message
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "form": BidForm(),
+                "form_2": CommentForm(),
+                "comments": comments,
+                "message": message,
+                "leading_bid": highest_bidder,
+                "count": bid_count
+            })                     
+
+        # Close activ auction (owner only)
         if "close" in request.POST:
             if listing.user_id == user.id:
                 listing = Listing.objects.get(id=listing.id)
                 listing.closed = True
                 listing.save()
-                if listing.highest_bid == 0:
-                    listing.delete()
-                    return HttpResponseRedirect(reverse("index"))
                 return HttpResponseRedirect(f"{listing.title}")                
 
+        # Add comment to listing
         if "comment" in request.POST:
             form_2 = CommentForm(request.POST)
             if form_2.is_valid():
-                comment = form_2.cleaned_data["comment"]
-                print(comment)
+                comment = form_2.cleaned_data["comment"]              
                 new_comment = Comment(user=user, listing=listing, comment=comment)
                 new_comment.save()
-                
-    # inform winner of auction
-    if listing.closed == True:
-        winner = (Bid.objects.get(current_bid=listing.highest_bid, listing_id=listing.id)).user_id
+            return HttpResponseRedirect(f"{listing.title}")  
 
+    # method == GET
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "form": BidForm(),
         "form_2": CommentForm(),
-        "winner": winner,
-        "message": message
-    })     
+        "comments": comments,
+        "leading_bid": highest_bidder,
+        "count": bid_count
+    })        
 
 
 # watchlist
