@@ -89,33 +89,42 @@ class CommentForm(forms.ModelForm):
    
 # display listing page
 def listing(request, item_name):
+    
+    # Query listing
     try: 
         listing = Listing.objects.prefetch_related().get(title=item_name)
     except:
         raise Http404("Listing does not exist.")
-    
+
     user = request.user
     comments = Comment.objects.filter(listing_id=listing.id)
-    on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
     bid_count = Bid.objects.filter(current_bid=listing.highest_bid, listing_id=listing.id).count()
 
+    # Query current highest bidder
     try:
         highest_bidder = Bid.objects.get(current_bid=listing.highest_bid, listing_id=listing.id)
     except:
         highest_bidder = None
-        
+  
+    # Query watchlist
+    try:
+        on_watchlist = Watchlist.objects.filter(user=user, listing=listing).first()         
+    except:
+        on_watchlist = None
+
+    # method == POST: Login required
     if request.method == "POST":
 
-        # add/remove item from watchlist
+        # Add/remove item from watchlist
         if "watchlist" in request.POST:
             if on_watchlist:
                 on_watchlist.delete()     
             else:
                 add_to_watchlist = Watchlist(user=user, listing=listing) 
                 add_to_watchlist.save()
-            return HttpResponseRedirect(reverse("watchlist"))
+            return HttpResponseRedirect(f"{listing.title}") 
         
-        # Bid on listing-item
+        # Bid on listing-item (login req.)
         if "bid" in request.POST:
             form = BidForm(request.POST)
             form.fields["current_bid"].required = True
@@ -155,10 +164,11 @@ def listing(request, item_name):
                 "comments": comments,
                 "message": message,
                 "leading_bid": highest_bidder,
-                "count": bid_count
+                "count": bid_count,
+                "watchlist": on_watchlist
             })                     
 
-        # Close activ auction (owner only)
+        # Close active auction (owner only)
         if "close" in request.POST:
             if listing.user_id == user.id:
                 listing = Listing.objects.get(id=listing.id)
@@ -182,7 +192,8 @@ def listing(request, item_name):
         "form_2": CommentForm(),
         "comments": comments,
         "leading_bid": highest_bidder,
-        "count": bid_count
+        "count": bid_count,
+        "watchlist": on_watchlist
     })        
 
 
