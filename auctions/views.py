@@ -21,7 +21,7 @@ class ListingForm(forms.ModelForm):
         model = Listing
         fields = ("title", "description", "start_bid", "img_url", "category")
             
-        widget = {
+        widgets = {
             "description": forms.Textarea(),
             "category": forms.Select()
         }
@@ -65,10 +65,10 @@ def create_listing(request):
 class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
-        fields = ("current_bid",)
+        fields = ["current_bid"]
         
         labels = {
-            "current_bid": "Bid on this item $:"
+            "current_bid": "Place your bid:"
         }
 
 
@@ -76,10 +76,10 @@ class BidForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ("comment",)
+        fields = ["comment"]
         
-        widget = {
-            "comment": forms.Textarea()
+        widgets = {
+            "comment": forms.Textarea(attrs={"rows":3, "cols":10})
         }
         
         labels = {

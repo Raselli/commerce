@@ -1,92 +1,112 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    </div>
-        <h2>Listing: "{{ listing.title }}"</h2>
-
-        {% if listing.category %}
-            <h3> Category: {{ listing.category }}</h3>
-        {% endif %}
-        
-        {% if user.is_authenticated and listing.closed == False %}
-            <form action="" method="post">
-                {% csrf_token %}
-                {% if watchlist.id %}
-                    <input type="submit" name="watchlist" value="Remove from Watchlist">
-                {% else %}
-                    <input type="submit" name="watchlist" value="Add to Watchlist">
-                {% endif %}
-            </form>        
-        {% endif %}
-           
-        {% if listing.img_url %}
-            <div>                     
-                <img class="listing_img" src="{{ listing.img_url }}" alt="{{ listing.title }}">
+    <div class="ls_frame">
+        <div>
+            <div div class="ls_grid_title">
+                <div>
+                    <h2>Listing: "{{ listing.title }}"</h2>
+                </div>
+                <div class="ls_grid_title-item">
+                    {% if user.is_authenticated and listing.closed == False %}
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {% if watchlist.id %}
+                                <input class="btn btn-info" type="submit" name="watchlist" value="Remove from Watchlist">
+                            {% else %}
+                                <input class="btn btn-info" type="submit" name="watchlist" value="Add to Watchlist">
+                            {% endif %}
+                            {% if listing.user_id == user.id %}
+                                <input class="btn btn-danger" type="submit" name="close" value="close auction">
+                            {% endif %} 
+                        </form>        
+                    {% endif %}
+                </div>           
             </div>
-        {% endif %}  
+            <hr>
 
-        <div>
-            Description: {{ listing.description }}
-        </div>
-        <div>
-            {% if listing.start_bid > listing.highest_bid %}
-                ${{ listing.start_bid }}
-            {% else %}
-                ${{ listing.highest_bid }}
+            {% if listing.category %}
+                <h3> Category: {{ listing.category }}</h3>
             {% endif %}
-        </div>
-        <div>
-            {% if listing.closed == True %}
-                <b>This auction is closed.</b>
-                {% if leading_bid.user == user %}
-                    You have won the auction at a bid of ${{ listing.highest_bid }}.
-                {% endif %}                    
-            {% else %}
-                Currently there are {{ count }} bid(s).
-                {% if leading_bid.user == user %}
-                    Your bid is the current bid.
-                {% endif %}                
-            {% endif %}   
-        </div>
-
-        {% if user.is_authenticated and listing.closed == False %}         
-            <form action="" method="post">
-                {% csrf_token %}
-                {{ form }}
-                <input type="submit" name="bid" value="bid">
-                {% if message %}
-                    {{ message }}
-                {% endif %}
-                {% if listing.user_id == user.id %}
-                    <div>
-                        <input type="submit" name="close" value="close auction">
+            
+            {% if listing.img_url %}
+                <div>                     
+                    <img class="listing_img" src="{{ listing.img_url }}" alt="{{ listing.title }}">
+                </div>
+            {% endif %}
+            <div class="ls_row">
+                <div class="label_description">Description:</div>
+                <div class="description">
+                    {{ listing.description }}
+                </div>
+            </div>
+            <div class="ls_row">
+                <div class="ls_grid">
+                    <div class="ls_grid-item">
+                        {% if listing.closed == True %}
+                            <b>This auction is closed.</b>
+                            {% if leading_bid.user == user %}
+                                You have won the auction at a bid of ${{ listing.highest_bid }}.
+                            {% endif %}                    
+                        {% else %}
+                            Currently there are {{ count }} bid(s).
+                            {% if leading_bid.user == user %}
+                                Your bid is the current bid.
+                            {% endif %}                
+                        {% endif %}
+                        <p class="price">
+                            {% if listing.start_bid > listing.highest_bid %}
+                                ${{ listing.start_bid }}
+                            {% else %}
+                                ${{ listing.highest_bid }}
+                            {% endif %}
+                        </p>                       
                     </div>
-                {% endif %} 
-            </form>
-        {% endif %}
+                    <div class="ls_grid-item">
+                        {% if user.is_authenticated and listing.closed == False %}         
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div class="label_description">
+                                    {{ form.current_bid.label }}
+                                    {{ form.current_bid }}                                    
+                                    <input class="btn btn-primary" type="submit" name="bid" value="Place Bid">
+                                </div>
+                                {% if message %}
+                                    {{ message }}
+                                {% endif %}
+                            </form>
+                        {% endif %}                
+                    </div>                
+                </div>
 
-    </div>
-    <hr>
-    <div>
-        <h2>Comment Section:</h2>
-        <ul>
-            {% if comments %}
-                {% for comment in comments %}
-                <li>{{ comment }}</li>
-                {% endfor %}
-            {% else %}
-                <li>No comments on this listing item.</li>
+            </div>
+        </div>
+        <hr>
+        <div>
+            <h2>Comment Section:</h2>
+            <ol>
+                {% if comments %}
+                    {% for comment in comments %}
+                        <li>
+                            <div>
+                                {{ comment }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li>No comments on this listing item.</li>
+                {% endif %}
+            </ol>
+
+            {% if user.is_authenticated and listing.closed == False %}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form_2.comment.label }}
+                    {{ form_2.comment }}
+                    <input class="btn btn-info" type="submit" name="submit_comment" value="send">
+                </form>
             {% endif %}
-        </ul>
-
-        {% if user.is_authenticated and listing.closed == False %}
-            <form action="" method="post">
-                {% csrf_token %}
-                {{ form_2 }}
-                <input type="submit" name="submit_comment" value="send">
-            </form>
-        {% endif %}
-
+        </div>
     </div>
 
 {% endblock %}
