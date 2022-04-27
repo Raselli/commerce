@@ -2,57 +2,73 @@
 
 {% block body %}
     </div>
-        <h2>Listing</h2>
+        <h2>Listing: "{{ listing.title }}"</h2>
 
-        {{ listing }}
-        Amount of auctions: {{ count}}
-
-        {% if user.is_authenticated %}         
+        {% if listing.category %}
+            <h3> Category: {{ listing.category }}</h3>
+        {% endif %}
+        
+        {% if user.is_authenticated and listing.closed == False %}
             <form action="" method="post">
                 {% csrf_token %}
-                {% if listing.closed == False %}
-
-                    {% if watchlist.id %}
-                        <input type="submit" name="watchlist" value="Remove">
-                    {% else %}
-                        <input type="submit" name="watchlist" value="Add">
-                    {% endif %}
-
-                    {{ form }}
-                    <input type="submit" name="bid" value="bid">
-                    {% if listing.user_id == user.id %}
-                        <input type="submit" name="close" value="close auction">
-                    {% endif %}        
+                {% if watchlist.id %}
+                    <input type="submit" name="watchlist" value="Remove from Watchlist">
                 {% else %}
-                AAAA
-                    {% if listing.closed == True and leading_bid.user_id == user.id %}
-                        <span>
-                            Congratulations!
-                            <br>
-                            You, {{ user.username }}, have won the auction at a bid of ${{ listing.highest_bid }}.
-                            <br>
-                        </span>
-                    {% endif %}     
+                    <input type="submit" name="watchlist" value="Add to Watchlist">
                 {% endif %}
+            </form>        
+        {% endif %}
+           
+        {% if listing.img_url %}
+            <div>                     
+                <img class="listing_img" src="{{ listing.img_url }}" alt="{{ listing.title }}">
+            </div>
+        {% endif %}  
+
+        <div>
+            Description: {{ listing.description }}
+        </div>
+        <div>
+            {% if listing.start_bid > listing.highest_bid %}
+                ${{ listing.start_bid }}
+            {% else %}
+                ${{ listing.highest_bid }}
+            {% endif %}
+        </div>
+        <div>
+            {% if listing.closed == True %}
+                <b>This auction is closed.</b>
+                {% if leading_bid.user == user %}
+                    You have won the auction at a bid of ${{ listing.highest_bid }}.
+                {% endif %}                    
+            {% else %}
+                Currently there are {{ count }} bid(s).
+                {% if leading_bid.user == user %}
+                    Your bid is the current bid.
+                {% endif %}                
+            {% endif %}   
+        </div>
+
+        {% if user.is_authenticated and listing.closed == False %}         
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" name="bid" value="bid">
                 {% if message %}
                     {{ message }}
                 {% endif %}
+                {% if listing.user_id == user.id %}
+                    <div>
+                        <input type="submit" name="close" value="close auction">
+                    </div>
+                {% endif %} 
             </form>
         {% endif %}
-        {% if listing.closed == True %}
-            <b>This auction is closed.</b> 
-        {% endif %}     
+
     </div>
     <hr>
     <div>
         <h2>Comment Section:</h2>
-        {% if user.is_authenticated and listing.closed == False %}
-            <form action="" method="post">
-                {% csrf_token %}
-                {{ form_2 }}
-                <input type="submit" name="submit_comment" value="send">
-            </form>
-        {% endif %}        
         <ul>
             {% if comments %}
                 {% for comment in comments %}
@@ -62,6 +78,15 @@
                 <li>No comments on this listing item.</li>
             {% endif %}
         </ul>
+
+        {% if user.is_authenticated and listing.closed == False %}
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form_2 }}
+                <input type="submit" name="submit_comment" value="send">
+            </form>
+        {% endif %}
+
     </div>
 
 {% endblock %}

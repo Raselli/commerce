@@ -2,7 +2,7 @@ body {
     padding: 10px;
 }
 
-.grid {
+.list {
     background-color: green;
     display: grid;
     padding: 20px;
@@ -11,7 +11,7 @@ body {
     grid-template-columns: auto;
 }
 
-.grid-item {
+.list-item {
     margin: 0px auto 0px auto;
     width: 70vw;
     height: 200px;
@@ -27,4 +27,10 @@ body {
     width: 150px;
     height: 150px;
     background-color: darkgray;
-}  
+}
+
+.listing_img {
+    height: 500px;
+    width: 500px;
+    object-fit: cover;
+}

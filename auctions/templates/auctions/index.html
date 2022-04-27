@@ -2,11 +2,11 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-    <div class="grid">      
+    <div class="list">      
     {% if listings %}
         {% for listing in listings %}
 
-            <div class="grid-item">
+            <div class="list-item">
                 <table>
                     <tr>
                         <td>
@@ -48,7 +48,7 @@
 
     {% else %}
 
-        <div class="grid-item">
+        <div class="list-item">
             No listings atm.
         </div>   
 

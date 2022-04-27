@@ -98,7 +98,7 @@ def listing(request, item_name):
 
     user = request.user
     comments = Comment.objects.filter(listing_id=listing.id)
-    bid_count = Bid.objects.filter(current_bid=listing.highest_bid, listing_id=listing.id).count()
+    bid_count = Bid.objects.filter(listing_id=listing.id).count()
 
     # Query current highest bidder
     try:
@@ -204,11 +204,14 @@ def watchlist(request, **kwargs):
     
     # remove item from watchlist
     if request.method == "POST":
-        listing = kwargs["pk"]             
-        on_watchlist = Watchlist.objects.filter(user=user, listing=listing)
-        on_watchlist.delete()
-        return HttpResponseRedirect(reverse("watchlist"))
-
+        listing = kwargs["pk"]
+        try:            
+            on_watchlist = Watchlist.objects.get(user=user, listing=listing)
+            on_watchlist.delete()
+            return HttpResponseRedirect(reverse("watchlist"))
+        except:
+            raise Http404("Watchlist-item does not exist.")
+        
     # method == GET
     else:         
         return render(request, "auctions/watchlist.html", {
@@ -220,7 +223,7 @@ def watchlist(request, **kwargs):
 def categories(request, **kwargs):
     if kwargs:
         # render category "unlisted"
-        if kwargs['cat_name'] == "unlisted":
+        if kwargs["cat_name"] == "unlisted":
             return render(request, "auctions/categories.html", {
                 "categories": Category.objects.all(),
                 "active_cat": "unlisted",
