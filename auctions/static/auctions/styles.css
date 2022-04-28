@@ -1,6 +1,6 @@
 body {
     padding: 10px;
-    background-color: wheat;
+    background-color: rgba(245, 222, 179, 0.5);
 }
 
 .list {
@@ -24,15 +24,11 @@ body {
     text-align: center;
 }
 
-
-
-
 .img_background {
     width: 150px;
     height: 150px;
     background-color: darkgray;
 }
-
 
 .listing_img {
     height: 500px;
@@ -81,20 +77,8 @@ body {
     grid-template-columns: auto auto;   
 } 
 
-.ls_grid_title-item {
-
-
-
-
-
-
-
-
-
+.right {
     float: right;
-
-
-    
 }
 
 .ls_grid {
@@ -110,4 +94,21 @@ body {
 .ls_grid-item {
     margin: auto;
     padding: 20px; 
+}
+
+.comment {
+    padding: 25px;
+    font-family: 'Times New Roman', Times, serif;
+    border: 2px inset rgb(223, 223, 223);
+    border-radius: 5px;
+    background-color: ghostwhite;
+    margin-bottom: 25px;
+}
+
+.add_comment {
+    height: 80px;
+}
+
+textarea {
+    width: 100%;
 }

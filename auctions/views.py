@@ -83,7 +83,7 @@ class CommentForm(forms.ModelForm):
         }
         
         labels = {
-            "comment": "Add your comment here!"
+            "comment": "Add your comment here:"
         }
 
    
@@ -230,7 +230,7 @@ def categories(request, **kwargs):
                 "listings": Listing.objects.filter(category_id=None)
             })                   
 
-        # render category (excluding": "unlisted")
+        # render category (excluding: "unlisted")
         try:
             active_cat = kwargs["cat_name"]
             cat_id = Category.objects.get(category=active_cat).id
