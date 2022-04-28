@@ -1,13 +1,63 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-    {% if message %}
-        <b>{{ message }}</b>
-    {% endif %}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit">
-    </form>
+<div class="create_frame">
+    <div>
+    </div>
+    <div class="create_box">
+        <h2>Create Listing</h2>
+        {% if message %}
+            <b>{{ message }}</b>
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="create_ls">
+                <div>
+                    {{ form.category.label_tag }}
+                </div>
+                <div>
+                    {{ form.category }}
+                </div>
+            </div>
+            <hr>
+            <div class="create_ls">
+                <div>
+                    {{ form.title.label_tag }}
+                </div>
+                <div>    
+                    {{ form.title }}
+                </div>
+            </div>
+            <div class="create_ls">        
+                <div>
+                    {{ form.img_url.label_tag }}
+                </div>
+                <div>
+                    {{ form.img_url }}
+                </div>  
+            </div>            
+            <div class="create_ls">
+                <div>
+                    {{ form.start_bid.label_tag }}
+                </div>
+                <div>
+                    {{ form.start_bid }} US$
+                </div>
+            </div>            
+            <div class="create_ls">
+                <div>
+                    {{ form.description.label_tag }}
+                </div>
+                <div>
+                    {{ form.description }}
+                </div>
+            </div>
+            <div class="right">
+                <input class="btn btn-primary" type="submit">
+            </div>   
+        </form>
+    </div>
+    <div>
+    </div>
+</div>
 {% endblock %}

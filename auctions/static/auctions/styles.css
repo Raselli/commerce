@@ -3,6 +3,10 @@ body {
     background-color: rgba(245, 222, 179, 0.5);
 }
 
+textarea {
+    width: 100%;
+}
+
 .list {
     background-color: green;
     display: grid;
@@ -109,6 +113,26 @@ body {
     height: 80px;
 }
 
-textarea {
-    width: 100%;
+/* create_listing.html */
+.create_ls {
+    margin-bottom: 10px;
+}
+
+.create_frame {
+    display: grid;
+    padding: 0px;
+    border: 1px solid black;
+    grid-template-columns: auto 540px auto; 
+}
+
+.create_frame textarea, input[type="text"], input[type="url"] {
+    width: 400px;
+}
+
+.create_box {
+    background-color: white;
+    padding: 25px 50px 25px 50px;
+    margin: 20px;
+    box-shadow: 2px 2px 2px;
+    border: 1px solid grey;
 }

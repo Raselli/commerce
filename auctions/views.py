@@ -27,11 +27,11 @@ class ListingForm(forms.ModelForm):
         }
         
         labels = {
-            "title": "Title of listing item",
-            "Description": "Description of listing item",
-            "start_bid": "Staring Bid $:",
-            "img_url": "Add an URL of your listing:",
-            "category": "Choose a category."
+            "title": "Title of listing:",
+            "description": "Describe your listing:",
+            "start_bid": "Staring Bid:",
+            "img_url": "Add an image of your listing (URL):",
+            "category": "Choose a category:"
         }
         
         
