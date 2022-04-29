@@ -68,7 +68,7 @@ class BidForm(forms.ModelForm):
         fields = ["current_bid"]
         
         labels = {
-            "current_bid": "Place your bid:"
+            "current_bid": "Place a bid"
         }
 
 
@@ -83,7 +83,7 @@ class CommentForm(forms.ModelForm):
         }
         
         labels = {
-            "comment": "Add your comment here:"
+            "comment": "Add your comment here"
         }
 
    

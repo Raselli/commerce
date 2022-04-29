@@ -7,35 +7,35 @@
                 <div>
                     <h2>Listing: "{{ listing.title }}"</h2>
                 </div>
-                <div class="ls_grid_title-item">
+                <div>
                     {% if user.is_authenticated and listing.closed == False %}
-                        <form action="" method="post">
-                            {% csrf_token %}
-                            {% if watchlist.id %}
-                                <input class="btn btn-info" type="submit" name="watchlist" value="Remove from Watchlist">
-                            {% else %}
-                                <input class="btn btn-info" type="submit" name="watchlist" value="Add to Watchlist">
-                            {% endif %}
-                            {% if listing.user_id == user.id %}
-                                <input class="btn btn-danger" type="submit" name="close" value="close auction">
-                            {% endif %} 
-                        </form>        
+                        <div class="right">                    
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                {% if watchlist.id %}
+                                    <input class="btn btn-info" type="submit" name="watchlist" value="Remove from Watchlist">
+                                {% else %}
+                                    <input class="btn btn-info" type="submit" name="watchlist" value="Add to Watchlist">
+                                {% endif %}
+                                {% if listing.user_id == user.id %}
+                                    <input class="btn btn-danger" type="submit" name="close" value="close auction">
+                                {% endif %} 
+                            </form>
+                        </div>      
                     {% endif %}
                 </div>           
             </div>
             <hr>
-
             {% if listing.category %}
                 <h3> Category: {{ listing.category }}</h3>
             {% endif %}
-            
             {% if listing.img_url %}
                 <div>                     
-                    <img class="listing_img" src="{{ listing.img_url }}" alt="{{ listing.title }}">
+                    <img class="img_listing" src="{{ listing.img_url }}" alt="{{ listing.title }}">
                 </div>
             {% endif %}
             <div class="ls_row">
-                <div class="label_description">Description:</div>
+                <div class="label_description">Description</div>
                 <div class="description">
                     {{ listing.description }}
                 </div>
@@ -81,29 +81,29 @@
 
             </div>
         </div>
-        <hr>
         <div>
-            <h2>Comment Section:</h2>
-            <ol>
-                {% if comments %}
-                    {% for comment in comments %}
-                        <li>
-                            <div>
-                                {{ comment }}
-                            </div>
-                        </li>
-                    {% endfor %}
-                {% else %}
-                    <li>No comments on this listing item.</li>
-                {% endif %}
-            </ol>
-
+            <h2>Comment Section</h2>
+            <br>
+            {% if comments %}
+                {% for comment in comments %}
+                        <b>{{ comment.user|title }}</b>
+                        <div class="comment">
+                            {{ comment.comment }}                          
+                        </div>
+                {% endfor %}
+            {% else %}
+                No comments on this listing item.
+            {% endif %}
             {% if user.is_authenticated and listing.closed == False %}
                 <form action="" method="post">
                     {% csrf_token %}
                     {{ form_2.comment.label }}
                     {{ form_2.comment }}
-                    <input class="btn btn-info" type="submit" name="submit_comment" value="send">
+                    <div>
+                        <div class="right">
+                            <input class="btn btn-info" type="submit" name="submit_comment" value="send">
+                        </div>
+                    </div>
                 </form>
             {% endif %}
         </div>

@@ -27,7 +27,7 @@
             <div class="category_box">
                 {% if active_cat %}
                     <h2>{{ active_cat|title }}</h2>
-                    <ul>
+                    <ol>
                         {% if listings%}
                             {% for item in listings %}
                                 <li>
@@ -37,9 +37,10 @@
                         {% else %}
                             <li>There are currently no listings under this category.</li>
                         {% endif %}
-                    </ul>
+                    </ol>
                 {% else %}
-                    <h2>Select a category</h2>                 
+                    <h2>Category</h2>
+                    Select a category.                
                 {% endif %}
             </div>
         <div>

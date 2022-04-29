@@ -22,7 +22,7 @@
             <hr>
             <div class="create_ls">
                 <div>
-                    {{ form.title.label_tag }}
+                    {{ form.title.label_tag }}*
                 </div>
                 <div>    
                     {{ form.title }}
@@ -38,7 +38,7 @@
             </div>            
             <div class="create_ls">
                 <div>
-                    {{ form.start_bid.label_tag }}
+                    {{ form.start_bid.label_tag }}*
                 </div>
                 <div>
                     {{ form.start_bid }} US$
@@ -46,13 +46,15 @@
             </div>            
             <div class="create_ls">
                 <div>
-                    {{ form.description.label_tag }}
+                    {{ form.description.label_tag }}*
                 </div>
                 <div>
                     {{ form.description }}
                 </div>
             </div>
+            <i>* required</i>
             <div class="right">
+                
                 <input class="btn btn-primary" type="submit">
             </div>   
         </form>
