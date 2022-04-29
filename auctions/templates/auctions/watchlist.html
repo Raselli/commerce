@@ -1,20 +1,26 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Watchlist</h2>
-    <ul>      
+<div class="wl_frame">
+    <div>
+    </div>
+    <div>
+        <h2>Watchlist</h2>
         {% for item in watchlist %}
-            <li>
-                <form action="{% url "watchlist" pk=item.listing.id %}" method="post">
-                    {% csrf_token %}
-                    <a href="listing/{{ item.listing.title }}">{{ item.listing }}</a>                  
-                    <input type="submit" name="remove" value="remove">
-                </form>
-            </li>    
+            <form action="{% url "watchlist" pk=item.listing.id %}" method="post">
+                {% csrf_token %}
+                
+
+                <a href="listing/{{ item.listing.title }}">{{ item.listing.title }}</a>                                
+                <input class="btn btn-danger" type="submit" name="remove" value="remove">                                                    
+
+            </form>
         {% endfor %}
-        
         {% if not watchlist %}
-            <li>No items are currently on your watchlist.</li>
+            No items are currently on your watchlist.
         {% endif %}
-    </ul>
+    </div>
+    <div>
+    </div>
+</div>
 {% endblock %}

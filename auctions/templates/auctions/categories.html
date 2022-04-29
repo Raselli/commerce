@@ -1,34 +1,50 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Categories</h2>
-    <ul>
-        
-        {% for item in categories %}
-            <li>
-                <a href="../categories/{{ item.category }}">{{ item.category|title }}</a>
-            </li>    
-        {% endfor %}
 
-        <br>
-        <li>
-            <a href="../categories/unlisted">Unlisted</a>
-        </li>
-    </ul>
+    <div class="category_frame">
+        <div>
+        </div>
+        <div>
+            <div class="category_box">
+                <h2>Categories</h2>
+                <ul>
+                    
+                    {% for item in categories %}
+                        <li>
+                            <a href="../categories/{{ item.category }}">{{ item.category|title }}</a>
+                        </li>    
+                    {% endfor %}
 
-    {% if active_cat %}
-        <h2>{{ active_cat|title }}</h2>
-        <ul>
-            {% if listings%}
-                {% for item in listings %}
+                    <br>
                     <li>
-                        <a href="../listing/{{ item.title }}">{{ item.title|title }}</a>
-                    </li>    
-                {% endfor %}
-            {% else %}
-                <li>There are currently no listings under this category.</li>
-            {% endif %}
-        </ul>
-    {% endif %}
+                        <a href="../categories/unlisted">Unlisted</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div>        
+            <div class="category_box">
+                {% if active_cat %}
+                    <h2>{{ active_cat|title }}</h2>
+                    <ul>
+                        {% if listings%}
+                            {% for item in listings %}
+                                <li>
+                                    <a href="../listing/{{ item.title }}">{{ item.title|title }}</a>
+                                </li>    
+                            {% endfor %}
+                        {% else %}
+                            <li>There are currently no listings under this category.</li>
+                        {% endif %}
+                    </ul>
+                {% else %}
+                    <h2>Select a category</h2>                 
+                {% endif %}
+            </div>
+        <div>
+        </div>
+    </div>
+
 
 {% endblock %}
