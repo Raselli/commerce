@@ -88,13 +88,14 @@
                 {% if comments %}
                     {% for comment in comments %}
                         <li>
-                            <div>
-                                {{ comment }}
+                            <div class="comment">
+                                {{ comment.comment }}
+                                <i class="right">by {{ comment.user }}</i>                                
                             </div>
                         </li>
                     {% endfor %}
                 {% else %}
-                    <li>No comments on this listing item.</li>
+                    No comments on this listing item.
                 {% endif %}
             </ol>
 
@@ -103,7 +104,11 @@
                     {% csrf_token %}
                     {{ form_2.comment.label }}
                     {{ form_2.comment }}
-                    <input class="btn btn-info" type="submit" name="submit_comment" value="send">
+                    <div>
+                        <div class="right">
+                            <input class="btn btn-info" type="submit" name="submit_comment" value="send">
+                        </div>
+                    </div>
                 </form>
             {% endif %}
         </div>

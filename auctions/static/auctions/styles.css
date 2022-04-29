@@ -7,35 +7,6 @@ textarea {
     width: 100%;
 }
 
-.list {
-    background-color: green;
-    display: grid;
-    padding: 20px;
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
-    grid-template-columns: auto;
-}
-
-.list-item {
-    margin: 0px auto 0px auto;
-    width: 70vw;
-    height: 200px;
-    border-radius: 20px;
-    box-shadow: 2px 2px 2px;
-    background-color: white;
-    font-size: 20px;
-    padding: 20px;
-    text-align: center;
-}
-
-
-
-.listing_img {
-    height: 500px;
-    width: 500px;
-    object-fit: cover;
-}
-
 
 /* listing.html */
 .price {
@@ -51,7 +22,7 @@ textarea {
 .description {
     font-family: 'Times New Roman', Times, serif;
     border: 2px inset grey;
-    border-radius: 20px;
+    border-radius: 5px;
     background-color: ghostwhite;
     min-height: 200px;
     padding: 20px;
@@ -62,7 +33,6 @@ textarea {
     max-width: 1000px;
     margin: 1% auto 1% auto;
     padding: 5%;
-    border-radius: 20px;
     border: 1px solid grey;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
 }
@@ -85,7 +55,7 @@ textarea {
 
 .ls_grid {
     border: 1px solid black;
-    border-radius: 20px;
+    border-radius: 5px;
     display: grid;
     padding: 0px;
     grid-column-gap: 20px;
@@ -99,7 +69,7 @@ textarea {
 }
 
 .comment {
-    padding: 25px;
+    padding: 5px;
     font-family: 'Times New Roman', Times, serif;
     border: 2px inset rgb(223, 223, 223);
     border-radius: 5px;
@@ -110,6 +80,7 @@ textarea {
 .add_comment {
     height: 80px;
 }
+
 
 /* category.html */
 .category_frame {
@@ -124,9 +95,9 @@ textarea {
     padding: 25px;
     background-color: white;
     box-shadow: 2px 2px 2px;
-    border-radius: 5px;
     height: 100%;
 }
+
 
 /* watchlist */
 .wl_frame {
@@ -146,9 +117,7 @@ textarea {
     box-shadow: 2px 2px 2px;
 }
 
-textarea {
-    width: 100%;
-}
+
 /* create_listing.html */
 .create_ls {
     margin-bottom: 10px;
@@ -156,8 +125,6 @@ textarea {
 
 .create_frame {
     display: grid;
-    padding: 0px;
-    border: 1px solid black;
     grid-template-columns: auto 540px auto; 
 }
 
@@ -173,7 +140,8 @@ textarea {
     border: 1px solid grey;
 }
 
-/* index.html 2 */
+
+/* index.html */
 .main_frame {
     display: grid;
     grid-column-gap: 20px;
