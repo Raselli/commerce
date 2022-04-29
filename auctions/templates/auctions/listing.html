@@ -7,28 +7,26 @@
                 <div>
                     <h2>Listing: "{{ listing.title }}"</h2>
                 </div>
-                <div>
-                    <div class="right">
-                        {% if user.is_authenticated and listing.closed == False %}
-                            <form action="" method="post">
-                                {% csrf_token %}
-                                {% if watchlist.id %}
-                                    <input class="btn btn-info" type="submit" name="watchlist" value="Remove from Watchlist">
-                                {% else %}
-                                    <input class="btn btn-info" type="submit" name="watchlist" value="Add to Watchlist">
-                                {% endif %}
-                                {% if listing.user_id == user.id %}
-                                    <input class="btn btn-danger" type="submit" name="close" value="close auction">
-                                {% endif %} 
-                            </form>        
-                        {% endif %}
-                    </div> 
+                <div class="ls_grid_title-item">
+                    {% if user.is_authenticated and listing.closed == False %}
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {% if watchlist.id %}
+                                <input class="btn btn-info" type="submit" name="watchlist" value="Remove from Watchlist">
+                            {% else %}
+                                <input class="btn btn-info" type="submit" name="watchlist" value="Add to Watchlist">
+                            {% endif %}
+                            {% if listing.user_id == user.id %}
+                                <input class="btn btn-danger" type="submit" name="close" value="close auction">
+                            {% endif %} 
+                        </form>        
+                    {% endif %}
                 </div>           
             </div>
             <hr>
 
             {% if listing.category %}
-                <h3> Category: {{ listing.category|title }}</h3>
+                <h3> Category: {{ listing.category }}</h3>
             {% endif %}
             
             {% if listing.img_url %}
@@ -83,37 +81,29 @@
 
             </div>
         </div>
+        <hr>
         <div>
             <h2>Comment Section:</h2>
+            <ol>
+                {% if comments %}
+                    {% for comment in comments %}
+                        <li>
+                            <div>
+                                {{ comment }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li>No comments on this listing item.</li>
+                {% endif %}
+            </ol>
 
-            {% if comments %}
-                {% for comment in comments %}
-                    <div class="label_description">
-                        {{ comment.user }} says:
-                    </div>                        
-                    <div class="comment">
-                        {{ comment.comment }}
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="comment">
-                    No comments on this listing item.
-                </div>
-            {% endif %}
-        </div>            
-        <div>
             {% if user.is_authenticated and listing.closed == False %}
                 <form action="" method="post">
                     {% csrf_token %}
-                    <div class="label_description">
-                        {{ form_2.comment.label }}
-                    </div>
-                    <div class="add_comment">
-                        {{ form_2.comment }}
-                    </div>
-                    <div class="right">
-                        <input class="btn btn-info" type="submit" name="submit_comment" value="send">
-                    </div>                
+                    {{ form_2.comment.label }}
+                    {{ form_2.comment }}
+                    <input class="btn btn-info" type="submit" name="submit_comment" value="send">
                 </form>
             {% endif %}
         </div>
