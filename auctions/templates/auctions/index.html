@@ -1,57 +1,79 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-    <div class="list">      
-    {% if listings %}
-        {% for listing in listings %}
-
-            <div class="list-item">
-                <table>
-                    <tr>
-                        <td>
-                            <div class="img_background">                       
-                                <img src="{{ listing.img_url }}" alt="{{ listing.title }}">
-                            </div>
-                        </td>
-                        <td>                        
-                            <table>
-                                <tr>                                           
-                                    <td>
-                                        <a href="listing/{{ listing.title }}">{{ listing.title }}</a>
-                                    </td>
-                                    <td>
-                                        {% if listing.highest_bid == 0 %}
-                                            $ {{ listing.start_bid }}
+    <div class="main_frame">
+        <div>
+        </div>
+        <div>
+            <h2>Active Listings</h2>              
+            {% if listings %}
+                {% for listing in listings %}
+                    <div class="listing_box">
+                        <table>
+                            <tr>
+                                <td>
+                                    <div class="img_background">
+                                        {% if listing.img_url %}                      
+                                            <img class="img_index" src="{{ listing.img_url }}" alt="{{ listing.title }}">
                                         {% else %}
-                                            $ {{ listing.highest_bid }}
+                                            <p>No Image available.</p>
                                         {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ listing.description }}
-                                    </td>
-                                    <td>
-                                        {{ listing.category.category }}
-                                    </td>
-                                    <td>
-                                        {{ listing.user }}        
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>                                                      
-                    </tr>
-                </table>
-
-            </div>
-
-        {% endfor %}
-
-    {% else %}
-
-        <div class="list-item">
-            No listings atm.
-        </div>   
-
-    {% endif %}
+                                    </div>
+                                </td>  
+                                <td>                        
+                                    <table>
+                                        <tr>                                           
+                                            <td colspan="3">
+                                                <div class="td_title">
+                                                    <h3>
+                                                        <a href="listing/{{ listing.title }}">{{ listing.title }}</a>
+                                                    </h3>
+                                                    {% if listing.category %}
+                                                        Category: {{ listing.category|title }}
+                                                    {% endif %}
+                                                <hr>
+                                                </div>                                   
+                                            </td>
+                                        </tr>
+                                        <tr>  
+                                            <td colspan="3">
+                                                <b>Description:</b>
+                                                <div class="td_description">
+                                                    
+                                                    {{ listing.description }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                listed by <b>{{ listing.user }}</b>      
+                                            </td>                                    
+                                            <td class="price">
+                                                    {% if listing.highest_bid == 0 %}
+                                                        ${{ listing.start_bid }}
+                                                    {% else %}
+                                                        ${{ listing.highest_bid }}
+                                                    {% endif %}
+                                            </td>                                    
+                                            <td>
+                                                <div class="right">
+                                                    <a class="btn btn-info" href="listing/{{ listing.title }}">Bid</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>                                                      
+                            </tr>
+                        </table>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="list-item">
+                    No listings atm.
+                </div>
+            {% endif %}
+        </div>
+        <div>
+        </div>
     </div>    
 {% endblock %}

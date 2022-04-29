@@ -3,6 +3,10 @@ body {
     background-color: rgba(245, 222, 179, 0.5);
 }
 
+textarea {
+    width: 100%;
+}
+
 .list {
     background-color: green;
     display: grid;
@@ -24,11 +28,7 @@ body {
     text-align: center;
 }
 
-.img_background {
-    width: 150px;
-    height: 150px;
-    background-color: darkgray;
-}
+
 
 .listing_img {
     height: 500px;
@@ -149,3 +149,84 @@ body {
 textarea {
     width: 100%;
 }
+/* create_listing.html */
+.create_ls {
+    margin-bottom: 10px;
+}
+
+.create_frame {
+    display: grid;
+    padding: 0px;
+    border: 1px solid black;
+    grid-template-columns: auto 540px auto; 
+}
+
+.create_frame textarea, input[type="text"], input[type="url"] {
+    width: 400px;
+}
+
+.create_box {
+    background-color: white;
+    padding: 25px 50px 25px 50px;
+    margin: 20px;
+    box-shadow: 2px 2px 2px;
+    border: 1px solid grey;
+}
+
+/* index.html 2 */
+.main_frame {
+    display: grid;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    grid-template-columns: auto 960px auto;   
+}
+
+.main_frame h2 {
+    margin: 55px;
+    text-decoration: underline;
+}
+.listing_box {
+    background-color: white;
+    margin: 50px;
+    padding: 25px;
+    width: 960px;
+    height: 320px;
+    box-shadow: 2px 2px 2px;
+}
+
+.img_background {
+    width: 265px;
+    height: 265px;
+    background-color: ghostwhite;
+    border: 1px solid grey;
+    text-align: center;     
+}
+
+.img_background p {
+    padding-top: 120px;
+}
+
+.img_index {
+    margin-top: 5px;
+    width: 250px;
+    height: 250px;
+}
+
+td {
+    padding-right: 20px;
+}
+
+.td_description {
+    height: 75px;
+    margin-left: 25px;
+    margin-bottom: 10px;
+    padding: 5px;
+    font-style: italic;
+    background-color: ghostwhite;
+    border-radius: 5px;
+}
+
+.td_title {
+    width: 600px;
+}
+
