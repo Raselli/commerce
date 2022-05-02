@@ -67,7 +67,6 @@
                             <form action="" method="post">
                                 {% csrf_token %}
                                 <div class="label_description">
-                                    {{ form.current_bid.label }}
                                     {{ form.current_bid }}                                    
                                     <input class="btn btn-primary" type="submit" name="bid" value="Place Bid">
                                 </div>

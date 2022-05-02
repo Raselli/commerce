@@ -1,12 +1,16 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+
     <div class="main_frame">
         <div>
         </div>
         <div>
-            <h2>Active Listings</h2>              
+
+            <h2>Active Listings</h2>
+
             {% if listings %}
+            
                 {% for listing in listings %}
                     <div class="listing_box">
                         <table>
@@ -49,11 +53,11 @@
                                                 listed by <b>{{ listing.user }}</b>      
                                             </td>                                    
                                             <td class="price">
-                                                    {% if listing.highest_bid == 0 %}
-                                                        ${{ listing.start_bid }}
-                                                    {% else %}
-                                                        ${{ listing.highest_bid }}
-                                                    {% endif %}
+                                                {% if listing.highest_bid == 0 %}
+                                                    ${{ listing.start_bid }}
+                                                {% else %}
+                                                    ${{ listing.highest_bid }}
+                                                {% endif %}
                                             </td>                                    
                                             <td>
                                                 <div class="right">
@@ -67,13 +71,16 @@
                         </table>
                     </div>
                 {% endfor %}
+
             {% else %}
                 <div class="list-item">
                     No listings atm.
                 </div>
             {% endif %}
+
         </div>
         <div>
         </div>
     </div>    
+
 {% endblock %}

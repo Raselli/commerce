@@ -27,11 +27,11 @@ class ListingForm(forms.ModelForm):
         }
         
         labels = {
-            "title": "Title of listing:",
-            "description": "Describe your listing:",
-            "start_bid": "Staring Bid:",
-            "img_url": "Add an image of your listing (URL):",
-            "category": "Choose a category:"
+            "title": "Title of listing*",
+            "description": "Describe your listing*",
+            "start_bid": "Staring Bid*",
+            "img_url": "Add an image of your listing (URL)",
+            "category": "Choose a category"
         }
         
         
@@ -66,6 +66,10 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields = ["current_bid"]
+        
+        widgets = {
+            "current_bid": forms.NumberInput(attrs={"placeholder": "Enter bid ($)"})
+        }
         
         labels = {
             "current_bid": "Place a bid"

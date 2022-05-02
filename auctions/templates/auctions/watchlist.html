@@ -1,26 +1,43 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<div class="wl_frame">
-    <div>
-    </div>
-    <div>
-        <h2>Watchlist</h2>
-        {% for item in watchlist %}
-            <form action="{% url "watchlist" pk=item.listing.id %}" method="post">
-                {% csrf_token %}
-                
 
-                <a href="listing/{{ item.listing.title }}">{{ item.listing.title }}</a>                                
-                <input class="btn btn-danger" type="submit" name="remove" value="remove">                                                    
+    <div class="wl_frame">
+        <div>
+        </div>
+        <div class="wl_box">
 
-            </form>
-        {% endfor %}
-        {% if not watchlist %}
-            No items are currently on your watchlist.
-        {% endif %}
+            <h2>Watchlist</h2>
+
+            <table>
+
+                {% for item in watchlist %}
+                    <tr>                    
+                        <form action="{% url "watchlist" pk=item.listing.id %}" method="post">
+                            {% csrf_token %}
+                            <td class="wl_title">                            
+                                <a href="listing/{{ item.listing.title }}">{{ item.listing.title }}</a>
+                            </td> 
+                            <td>  
+                                <input class="btn btn-danger" type="submit" name="remove" value="remove">
+                            </td>                            
+                        </form>
+                    </tr>                        
+                {% endfor %}
+
+                {% if not watchlist %}
+                    <tr>
+                        <td>  
+                            No items are currently on your watchlist.
+                        </td> 
+                    </tr>  
+                {% endif %}
+
+            </table>
+            
+        </div>
+        <div>
+        </div>
     </div>
-    <div>
-    </div>
-</div>
+
 {% endblock %}

@@ -1,12 +1,19 @@
 body {
     padding: 10px;
-    background-color: rgba(245, 222, 179, 0.5);
+    background-color:aliceblue;
 }
 
 textarea {
     width: 100%;
 }
 
+h1 {
+    float: left;
+}
+
+.h1_box {
+    width: 50%;
+}
 
 /* listing.html */
 .img_listing {
@@ -118,13 +125,22 @@ textarea {
     font-size: x-large;
 }
 
-.wl_frame li {
-    background-color: aliceblue;
-    padding: 5px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+.wl_box {
+    padding: 25px;
+    background-color: white;
     box-shadow: 2px 2px 2px;
+    height: 100%;
 }
+
+.wl_box tr {
+    background-color: ghostwhite;
+    border: solid 2px white;
+}
+
+.wl_title {
+    width: 100%;
+}
+
 
 /* create_listing.html */
 .create_ls {
@@ -188,7 +204,7 @@ textarea {
     height: 250px;
 }
 
-td {
+.main_frame td {
     padding-right: 20px;
 }
 
