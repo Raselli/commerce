@@ -41,15 +41,15 @@
 
             {% if listing.img_url %}
                 <div>                     
-                    <img class="img_listing" src="{{ listing.img_url }}" alt="{{ listing.title }}">
+                    <img class="ls_img" src="{{ listing.img_url }}" alt="{{ listing.title }}">
                 </div>
             {% endif %}
 
             <div class="ls_row">
-                <div class="label_description">
+                <div class="ls_label_description">
                     Description
                 </div>
-                <div class="description">
+                <div class="ls_description">
                     {{ listing.description }}
                 </div>
             </div>
@@ -73,7 +73,7 @@
 
                         {% endif %}
 
-                        <div class="price">
+                        <div class="ls_price">
 
                             {% if listing.start_bid > listing.highest_bid %}
                                 ${{ listing.start_bid }}
@@ -89,7 +89,7 @@
 
                             <form action="{% url 'listing' listing.title %}" method="post">
                                 {% csrf_token %}
-                                <div class="label_description">
+                                <div class="ls_label_description">
                                     {{ form.current_bid }}                                    
                                     <input class="btn btn-primary" type="submit" name="bid" value="Place Bid">
                                 </div>
@@ -113,7 +113,7 @@
             
                 {% for comment in comments %}
                     <b>{{ comment.user|title }}</b>
-                    <div class="comment">
+                    <div class="ls_comment">
                         {{ comment.comment }}                          
                     </div>
                 {% endfor %}

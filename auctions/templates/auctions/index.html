@@ -53,7 +53,7 @@
                                             <td>
                                                 listed by <b>{{ listing.user }}</b>      
                                             </td>                                    
-                                            <td class="price">
+                                            <td class="ls_price">
 
                                                 {% if listing.highest_bid == 0 %}
                                                     ${{ listing.start_bid }}
@@ -78,7 +78,7 @@
             {% else %}
 
                 <div class="listing_box">
-                    <div class="price">
+                    <div class="ls_price">
                         No listings.
                     </div>
                 </div>
