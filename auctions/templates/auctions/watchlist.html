@@ -1,7 +1,6 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
     <div class="wl_frame">
         <div>
         </div>
@@ -9,35 +8,28 @@
 
             <h2>Watchlist</h2>
 
-            <table>
+            {% if not watchlist %}
+                No items are currently on your watchlist.
+            {% else %}            
 
-                {% for item in watchlist %}
-                    <tr>                    
-                        <form action="{% url "watchlist" pk=item.listing.id %}" method="post">
-                            {% csrf_token %}
-                            <td class="wl_title">                            
-                                <a href="listing/{{ item.listing.title }}">{{ item.listing.title }}</a>
-                            </td> 
-                            <td>  
-                                <input class="btn btn-danger" type="submit" name="remove" value="remove">
-                            </td>                            
-                        </form>
-                    </tr>                        
-                {% endfor %}
+                    {% for item in watchlist %}
+                        <div class="wl_title">
 
-                {% if not watchlist %}
-                    <tr>
-                        <td>  
-                            No items are currently on your watchlist.
-                        </td> 
-                    </tr>  
-                {% endif %}
+                            <form action="{% url "watchlist" item.listing.id %}" method="post">
+                                {% csrf_token %}                        
+                                <a href="listing/{{ item.listing.title }}">{{ item.listing.title|title }}</a>
+                                <div class="right">
+                                    <input class="btn btn-danger" type="submit" name="remove" value="remove">
+                                </div>
+                            </form> 
+                                                           
+                        </div>                     
+                    {% endfor %}
 
-            </table>
-            
+            {% endif %}
+
         </div>
         <div>
         </div>
     </div>
-
 {% endblock %}

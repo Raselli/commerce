@@ -132,13 +132,10 @@ h1 {
     height: 100%;
 }
 
-.wl_box tr {
-    background-color: ghostwhite;
-    border: solid 2px white;
-}
-
 .wl_title {
-    width: 100%;
+    background-color: ghostwhite;
+    border: solid 2px white;    
+    padding: 1px;
 }
 
 /* login.html, register.html */

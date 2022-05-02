@@ -1,7 +1,6 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
     <div class="main_frame">
         <div>
         </div>
@@ -17,11 +16,13 @@
                             <tr>
                                 <td>
                                     <div class="img_background">
+
                                         {% if listing.img_url %}                      
                                             <img class="img_index" src="{{ listing.img_url }}" alt="{{ listing.title }}">
                                         {% else %}
                                             <p>No Image available.</p>
                                         {% endif %}
+
                                     </div>
                                 </td>  
                                 <td>                        
@@ -29,13 +30,14 @@
                                         <tr>                                           
                                             <td colspan="3">
                                                 <div class="td_title">
-                                                    <h3>
-                                                        <a href="listing/{{ listing.title }}">{{ listing.title }}</a>
-                                                    </h3>
+
+                                                    <h3><a href="listing/{{ listing.title }}">{{ listing.title }}</a></h3>
+
                                                     {% if listing.category %}
                                                         Category: {{ listing.category|title }}
                                                     {% endif %}
-                                                <hr>
+
+                                                    <hr>
                                                 </div>                                   
                                             </td>
                                         </tr>
@@ -43,7 +45,6 @@
                                             <td colspan="3">
                                                 <b>Description:</b>
                                                 <div class="td_description">
-                                                    
                                                     {{ listing.description }}
                                                 </div>
                                             </td>
@@ -53,11 +54,13 @@
                                                 listed by <b>{{ listing.user }}</b>      
                                             </td>                                    
                                             <td class="price">
+
                                                 {% if listing.highest_bid == 0 %}
                                                     ${{ listing.start_bid }}
                                                 {% else %}
                                                     ${{ listing.highest_bid }}
                                                 {% endif %}
+
                                             </td>                                    
                                             <td>
                                                 <div class="right">
@@ -73,16 +76,17 @@
                 {% endfor %}
 
             {% else %}
+
                 <div class="listing_box">
                     <div class="price">
                         No listings.
                     </div>
                 </div>
+                
             {% endif %}
 
         </div>
         <div>
         </div>
     </div>    
-
 {% endblock %}

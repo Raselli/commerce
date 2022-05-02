@@ -5,13 +5,11 @@
     <head>
         <title>{% block title %}Auctions{% endblock %}</title>
         <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
-
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
         <link rel="icon" href="data:;base64,iVBORw0KGgo=">        
     </head>
     <body>
-        
         <nav class="navbar navbar-default">
             <div class="container-fluid">
 
@@ -30,6 +28,7 @@
                     <li>
                         <a href="{% url 'watchlist' %}">Watchlist</a>
                     </li>
+                    
                     {% if user.is_authenticated %}
                         <li>
                             <a href="{% url 'logout' %}">Log Out</a>
@@ -41,14 +40,17 @@
                         <li>
                             <a class="nav-link" href="{% url 'register' %}">Register</a>
                         </li>
-                    {% endif %}    
+                    {% endif %} 
+
                 </ul>
                 <div class="log_info">
+
                     {% if user.is_authenticated %}
                         Signed in as <strong>{{ user.username }}</strong>
                     {% else %}
                         Not signed in.
                     {% endif %}
+
                 </div>
             </div>
         </nav>

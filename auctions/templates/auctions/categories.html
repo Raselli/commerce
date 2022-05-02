@@ -1,7 +1,6 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
     <div class="category_frame">
         <div>
         </div>
@@ -11,17 +10,17 @@
                 <h2>Categories</h2>
 
                 <ul>
+                    <li>
+                        <b><a href="../categories/unlisted">Unlisted</a></b>
+                    </li>
+
                     {% for item in categories %}
                         <li>
                             <a href="../categories/{{ item.category }}">{{ item.category|title }}</a>
                         </li>    
                     {% endfor %}
-                    <br>
-                    <li>
-                        <a href="../categories/unlisted">Unlisted</a>
-                    </li>
-                </ul>
 
+                </ul>
             </div>
         </div>
         <div>        
@@ -32,12 +31,14 @@
                     <h2>{{ active_cat|title }}</h2>
 
                     {% if listings%}
-                        <ol>                        
+                        <ol>        
+
                             {% for item in listings %}
                                 <li>
                                     <a href="../listing/{{ item.title }}">{{ item.title|title }}</a>
                                 </li>    
                             {% endfor %}
+
                         </ol>                            
                     {% else %}
                         <div>There are currently no listings under this category.</div>
@@ -46,8 +47,8 @@
                 {% else %}
 
                     <h2>Category</h2>
+                    
                     <div>Select a category.</div>
-
                 {% endif %}
 
             </div>
@@ -55,6 +56,4 @@
         <div>
         </div>
     </div>
-
-
 {% endblock %}
