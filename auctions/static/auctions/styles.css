@@ -240,7 +240,7 @@ input[type="password"], input[type="email"] {
 .log_info {
     float: right;
     position: absolute;
-    left: 90%;
+    right: 15px;
     top: 15px;
 }
 
