@@ -11,7 +11,6 @@ h1 {
     float: left;
     position: absolute;
     margin-top: 5px;
-    left: 45%;
 }
 
 .right {
@@ -243,4 +242,10 @@ input[type="password"], input[type="email"] {
     position: absolute;
     left: 90%;
     top: 15px;
+}
+
+.nav_frame {
+    float: left;
+    position: absolute;
+    margin-left: 25%;
 }
