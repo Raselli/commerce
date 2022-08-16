@@ -3,6 +3,7 @@ This project is an assignment from the course: CS50 Web Programming with Python 
 
 ## Assignment
 Design an eBay-like e-commerce auction site that will allow users to post auction listings, place bids on listings, comment on those listings, and add listings to a “watchlist.”
+https://cs50.harvard.edu/web/2020/projects/2/commerce/
 
 
 ## Distribution Code 
